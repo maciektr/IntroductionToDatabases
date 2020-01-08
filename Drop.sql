@@ -2,7 +2,7 @@
 -- Last modification date: 2020-01-08 22:14:26.269
 
 -- foreign keys
-ALTER TABLE Companies DROP CONSTRAINT Companies_Clients;
+-- ALTER TABLE Companies DROP CONSTRAINT Companies_Clients;
 
 ALTER TABLE Conference_day_registration DROP CONSTRAINT Conference_day_registration_Conference_day_reservations;
 

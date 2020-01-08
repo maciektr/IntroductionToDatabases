@@ -1,10 +1,10 @@
 -- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2020-01-08 22:14:26.269
+-- Last modification date: 2020-01-08 22:34:11.036
 
 -- tables
 -- Table: Clients
 CREATE TABLE Clients (
-    id int  NOT NULL,
+    id int  NOT NULL IDENTITY,
     zip_code varchar(6)  NOT NULL CHECK (zip_code like '[0-9][0-9]-[0-9][0-9][0-9]' ),
     city varchar(30)  NOT NULL CHECK (city not like '%[0-9]%'),
     address varchar(100)  NOT NULL,
@@ -14,11 +14,12 @@ CREATE TABLE Clients (
 -- Table: Companies
 CREATE TABLE Companies (
     companyName varchar(100)  NOT NULL,
-    nip varchar(10)  NOT NULL CHECK (nip not like '%[^0-9]%' and LEN(nip) = 10),
+    nip nvarchar(15)  NOT NULL CHECK (nip not like '%[^0-9]%' and LEN(nip) = 10),
     phone varchar(20)  NOT NULL CHECK (phone not like '%[^0-9]%'),
     clients_id int  NOT NULL,
     email varchar(100)  NOT NULL CHECK (email like '%_@__%.__%'),
     CONSTRAINT unique_nip UNIQUE (nip),
+    CONSTRAINT checkNip CHECK (dbo.IsValidNip(nip) = 1),
     CONSTRAINT Companies_pk PRIMARY KEY  (clients_id)
 );
 
