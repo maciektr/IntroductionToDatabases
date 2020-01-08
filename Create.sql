@@ -1,5 +1,5 @@
 -- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2020-01-08 20:38:59.737
+-- Last modification date: 2020-01-08 21:45:49.181
 
 -- tables
 -- Table: Clients
@@ -11,10 +11,14 @@ CREATE TABLE Clients (
 -- Table: Companies
 CREATE TABLE Companies (
     companyName varchar(100)  NOT NULL,
-    nip varchar(10)  NULL,
-    phone varchar(20)  NOT NULL,
+    nip varchar(10)  NOT NULL CHECK (nip not like '%[^0-9]%'),
+    phone varchar(20)  NOT NULL CHECK (phone not like '%[^0-9]%'),
     clients_id int  NOT NULL,
-    email varchar(100)  NOT NULL,
+    email varchar(100)  NOT NULL CHECK (email like '%_@__%.__%'),
+    zip_code varchar(6)  NOT NULL CHECK (zip_code like '[0-9][0-9]-[0-9][0-9][0-9]'),
+    city varchar(30)  NOT NULL CHECK (city like '^\p{L}+$'),
+    address varchar(100)  NOT NULL,
+    CONSTRAINT unique_nip UNIQUE (nip),
     CONSTRAINT Companies_pk PRIMARY KEY  (clients_id)
 );
 
@@ -22,7 +26,7 @@ CREATE TABLE Companies (
 CREATE TABLE Conference_day_registration (
     reservation_id int  NOT NULL,
     Participant_id int  NOT NULL,
-    is_student bit  NOT NULL,
+    is_student bit  NOT NULL DEFAULT 0,
     CONSTRAINT Conference_day_registration_pk PRIMARY KEY  (reservation_id,Participant_id)
 );
 
@@ -31,11 +35,11 @@ CREATE TABLE Conference_day_reservations (
     reservation_id int  NOT NULL,
     conference_day_id int  NOT NULL,
     clients_id int  NOT NULL,
-    reservation_date datetime  NOT NULL,
-    active bit  NOT NULL,
-    due_price datetime  NOT NULL,
-    adult_seats int  NOT NULL,
-    student_seats int  NOT NULL,
+    reservation_date datetime  NOT NULL DEFAULT GETDATE(),
+    active bit  NOT NULL DEFAULT 1,
+    due_price datetime  NOT NULL DEFAULT DATEADD(week, 2, reservation_date) CHECK (due_price >= reservation_date),
+    adult_seats int  NOT NULL DEFAULT 0 CHECK (adult_seats >= 0),
+    student_seats int  NOT NULL DEFAULT 0 CHECK (student_seats >= 0),
     CONSTRAINT Conference_day_reservations_pk PRIMARY KEY  (reservation_id)
 );
 
@@ -43,9 +47,9 @@ CREATE TABLE Conference_day_reservations (
 CREATE TABLE Conference_days (
     conference_day_id int  NOT NULL,
     conference_id int  NOT NULL,
-    date date  NOT NULL,
-    standard_price money  NOT NULL,
-    student_discount decimal(4,4)  NOT NULL,
+    date date  NOT NULL DEFAULT GETDATE(),
+    standard_price money  NOT NULL DEFAULT 0 CHECK (standard_price >= 0),
+    student_discount decimal(4,4)  NOT NULL DEFAULT 0 CHECK (student_discount >= 0),
     CONSTRAINT Conference_days_pk PRIMARY KEY  (conference_day_id)
 );
 
@@ -61,7 +65,7 @@ CREATE TABLE Early_signup_discounts (
     discount_id int  NOT NULL,
     conference_day_id int  NOT NULL,
     end_date datetime  NOT NULL,
-    discount decimal(4,4)  NOT NULL,
+    discount decimal(4,4)  NOT NULL DEFAULT 0 CHECK (discount >= 0),
     CONSTRAINT Early_signup_discounts_pk PRIMARY KEY  (discount_id)
 );
 
@@ -69,10 +73,10 @@ CREATE TABLE Early_signup_discounts (
 CREATE TABLE Participants (
     participant_id int  NOT NULL,
     clients_id int  NOT NULL,
-    name varchar(100)  NOT NULL,
-    surname varchar(100)  NOT NULL,
-    email varchar(100)  NOT NULL,
-    phone varchar(20)  NOT NULL,
+    name varchar(100)  NOT NULL CHECK (name like '^\p{L}+$'),
+    surname varchar(100)  NOT NULL CHECK (surname like '^\p{L}+$'),
+    email varchar(100)  NOT NULL CHECK (email like '%_@__%.__%'),
+    phone varchar(20)  NOT NULL CHECK (phone not like '%[^0-9]%'),
     CONSTRAINT Participants_pk PRIMARY KEY  (participant_id)
 );
 
@@ -96,9 +100,9 @@ CREATE TABLE Workshop_registration (
 CREATE TABLE Workshop_reservations (
     reservation_id int  NOT NULL,
     workshop_id int  NOT NULL,
-    reservation_date datetime  NOT NULL,
-    due_price datetime  NOT NULL,
-    nr_of_seats int  NOT NULL,
+    reservation_date datetime  NOT NULL DEFAULT GETDATE(),
+    due_price datetime  NOT NULL DEFAULT DATEADD(week, 2, reservation_date) CHECK (due_price >= reservation_date),
+    nr_of_seats int  NOT NULL DEFAULT 0 CHECK (nr_of_seats >= 0),
     Conference_day_reservations_reservation_id int  NOT NULL,
     CONSTRAINT Workshop_reservations_pk PRIMARY KEY  (reservation_id)
 );
@@ -108,10 +112,10 @@ CREATE TABLE Workshops (
     workshop_id int  NOT NULL,
     conference_day_id int  NOT NULL,
     start_time datetime  NOT NULL,
-    end_time datetime  NOT NULL,
+    end_time datetime  NOT NULL CHECK (end_time >= start_time),
     topic text  NOT NULL,
-    price money  NOT NULL,
-    number_of_seats int  NOT NULL,
+    price money  NOT NULL CHECK (price >= 0),
+    number_of_seats int  NOT NULL DEFAULT 0 CHECK (number_of_seats >= 0),
     CONSTRAINT Workshops_pk PRIMARY KEY  (workshop_id)
 );
 
