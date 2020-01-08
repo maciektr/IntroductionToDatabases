@@ -37,7 +37,7 @@ CREATE TABLE Conference_day_reservations (
     clients_id int  NOT NULL,
     reservation_date datetime  NOT NULL DEFAULT GETDATE(),
     active bit  NOT NULL DEFAULT 1,
-    due_price datetime  NOT NULL DEFAULT DATEADD(week, 2, reservation_date) CHECK (due_price >= reservation_date),
+    due_price datetime  NOT NULL DEFAULT DATEADD(week, 2, GETDATE()) CHECK (due_price >= GETDATE()),
     adult_seats int  NOT NULL DEFAULT 0 CHECK (adult_seats >= 0),
     student_seats int  NOT NULL DEFAULT 0 CHECK (student_seats >= 0),
     CONSTRAINT Conference_day_reservations_pk PRIMARY KEY  (reservation_id)
@@ -101,7 +101,7 @@ CREATE TABLE Workshop_reservations (
     reservation_id int  NOT NULL,
     workshop_id int  NOT NULL,
     reservation_date datetime  NOT NULL DEFAULT GETDATE(),
-    due_price datetime  NOT NULL DEFAULT DATEADD(week, 2, reservation_date) CHECK (due_price >= reservation_date),
+    due_price datetime  NOT NULL DEFAULT DATEADD(week, 2, GETDATE()) CHECK (due_price >= GETDATE()),
     nr_of_seats int  NOT NULL DEFAULT 0 CHECK (nr_of_seats >= 0),
     Conference_day_reservations_reservation_id int  NOT NULL,
     CONSTRAINT Workshop_reservations_pk PRIMARY KEY  (reservation_id)
@@ -112,7 +112,7 @@ CREATE TABLE Workshops (
     workshop_id int  NOT NULL,
     conference_day_id int  NOT NULL,
     start_time datetime  NOT NULL,
-    end_time datetime  NOT NULL CHECK (end_time >= start_time),
+    end_time datetime  NOT NULL CHECK (end_time >= GETDATE()),
     topic text  NOT NULL,
     price money  NOT NULL CHECK (price >= 0),
     number_of_seats int  NOT NULL DEFAULT 0 CHECK (number_of_seats >= 0),
