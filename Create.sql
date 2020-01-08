@@ -1,5 +1,5 @@
 -- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2020-01-08 22:34:11.036
+-- Last modification date: 2020-01-08 22:42:47.449
 
 -- tables
 -- Table: Clients
@@ -33,7 +33,7 @@ CREATE TABLE Conference_day_registration (
 
 -- Table: Conference_day_reservations
 CREATE TABLE Conference_day_reservations (
-    reservation_id int  NOT NULL,
+    reservation_id int  NOT NULL IDENTITY,
     conference_day_id int  NOT NULL,
     clients_id int  NOT NULL,
     reservation_date datetime  NOT NULL DEFAULT GETDATE(),
@@ -46,7 +46,7 @@ CREATE TABLE Conference_day_reservations (
 
 -- Table: Conference_days
 CREATE TABLE Conference_days (
-    conference_day_id int  NOT NULL,
+    conference_day_id int  NOT NULL IDENTITY,
     conference_id int  NOT NULL,
     date date  NOT NULL DEFAULT GETDATE(),
     standard_price money  NOT NULL DEFAULT 0 CHECK (standard_price >= 0),
@@ -56,14 +56,14 @@ CREATE TABLE Conference_days (
 
 -- Table: Conferences
 CREATE TABLE Conferences (
-    Conference_id int  NOT NULL,
+    Conference_id int  NOT NULL IDENTITY,
     name varchar(100)  NOT NULL,
     CONSTRAINT Conferences_pk PRIMARY KEY  (Conference_id)
 );
 
 -- Table: Early_signup_discounts
 CREATE TABLE Early_signup_discounts (
-    discount_id int  NOT NULL,
+    discount_id int  NOT NULL IDENTITY,
     conference_day_id int  NOT NULL,
     end_date datetime  NOT NULL,
     discount decimal(4,4)  NOT NULL DEFAULT 0 CHECK (discount >= 0),
@@ -72,7 +72,7 @@ CREATE TABLE Early_signup_discounts (
 
 -- Table: Participants
 CREATE TABLE Participants (
-    participant_id int  NOT NULL,
+    participant_id int  NOT NULL IDENTITY,
     clients_id int  NOT NULL,
     name varchar(100)  NOT NULL CHECK (name like '^\p{L}+$'),
     surname varchar(100)  NOT NULL CHECK (surname like '^\p{L}+$'),
@@ -83,7 +83,7 @@ CREATE TABLE Participants (
 
 -- Table: Payments
 CREATE TABLE Payments (
-    payment_id int  NOT NULL,
+    payment_id int  NOT NULL IDENTITY,
     reservation_id int  NOT NULL,
     in_date datetime  NOT NULL,
     value money  NOT NULL,
@@ -99,7 +99,7 @@ CREATE TABLE Workshop_registration (
 
 -- Table: Workshop_reservations
 CREATE TABLE Workshop_reservations (
-    reservation_id int  NOT NULL,
+    reservation_id int  NOT NULL IDENTITY,
     workshop_id int  NOT NULL,
     reservation_date datetime  NOT NULL DEFAULT GETDATE(),
     due_price datetime  NOT NULL DEFAULT DATEADD(week, 2, GETDATE()) CHECK (due_price >= GETDATE()),
@@ -110,7 +110,7 @@ CREATE TABLE Workshop_reservations (
 
 -- Table: Workshops
 CREATE TABLE Workshops (
-    workshop_id int  NOT NULL,
+    workshop_id int  NOT NULL IDENTITY,
     conference_day_id int  NOT NULL,
     start_time datetime  NOT NULL,
     end_time datetime  NOT NULL CHECK (end_time >= GETDATE()),
