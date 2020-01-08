@@ -1,5 +1,5 @@
 -- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2020-01-04 11:08:00.981
+-- Last modification date: 2020-01-08 20:38:59.737
 
 -- tables
 -- Table: Clients
@@ -11,8 +11,8 @@ CREATE TABLE Clients (
 -- Table: Companies
 CREATE TABLE Companies (
     companyName varchar(100)  NOT NULL,
-    nip varchar(10)  NOT NULL,
-    phone int  NOT NULL,
+    nip varchar(10)  NULL,
+    phone varchar(20)  NOT NULL,
     clients_id int  NOT NULL,
     email varchar(100)  NOT NULL,
     CONSTRAINT Companies_pk PRIMARY KEY  (clients_id)
@@ -72,6 +72,7 @@ CREATE TABLE Participants (
     name varchar(100)  NOT NULL,
     surname varchar(100)  NOT NULL,
     email varchar(100)  NOT NULL,
+    phone varchar(20)  NOT NULL,
     CONSTRAINT Participants_pk PRIMARY KEY  (participant_id)
 );
 
