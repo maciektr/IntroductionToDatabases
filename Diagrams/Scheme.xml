@@ -14,7 +14,7 @@
         </Counter>
         <Counter>
             <Name>column</Name>
-            <Value>76</Value>
+            <Value>86</Value>
             <Prefix>c</Prefix>
         </Counter>
         <Counter>
@@ -34,7 +34,7 @@
         </Counter>
         <Counter>
             <Name>alternate_key</Name>
-            <Value>0</Value>
+            <Value>3</Value>
             <Prefix>a</Prefix>
         </Counter>
         <Counter>
@@ -115,7 +115,7 @@
                     <Type>date</Type>
                     <Description></Description>
                     <Nullable>false</Nullable>
-                    <DefaultValue></DefaultValue>
+                    <DefaultValue>GETDATE()</DefaultValue>
                     <CheckExpression></CheckExpression>
                     <Properties/>
                 </Column>
@@ -124,8 +124,8 @@
                     <Type>money</Type>
                     <Description></Description>
                     <Nullable>false</Nullable>
-                    <DefaultValue></DefaultValue>
-                    <CheckExpression></CheckExpression>
+                    <DefaultValue>0</DefaultValue>
+                    <CheckExpression>standard_price &gt;= 0</CheckExpression>
                     <Properties/>
                 </Column>
                 <Column Id="c29">
@@ -133,8 +133,8 @@
                     <Type>decimal(4,4)</Type>
                     <Description></Description>
                     <Nullable>false</Nullable>
-                    <DefaultValue></DefaultValue>
-                    <CheckExpression></CheckExpression>
+                    <DefaultValue>0</DefaultValue>
+                    <CheckExpression>student_discount &gt;= 0</CheckExpression>
                     <Properties/>
                 </Column>
             </Columns>
@@ -187,7 +187,7 @@
                     <Type>datetime</Type>
                     <Description></Description>
                     <Nullable>false</Nullable>
-                    <DefaultValue></DefaultValue>
+                    <DefaultValue>GETDATE()</DefaultValue>
                     <CheckExpression></CheckExpression>
                     <Properties/>
                 </Column>
@@ -196,7 +196,7 @@
                     <Type>bit</Type>
                     <Description></Description>
                     <Nullable>false</Nullable>
-                    <DefaultValue></DefaultValue>
+                    <DefaultValue>1</DefaultValue>
                     <CheckExpression></CheckExpression>
                     <Properties/>
                 </Column>
@@ -205,8 +205,8 @@
                     <Type>datetime</Type>
                     <Description></Description>
                     <Nullable>false</Nullable>
-                    <DefaultValue></DefaultValue>
-                    <CheckExpression></CheckExpression>
+                    <DefaultValue>DATEADD(week, 2, GETDATE())</DefaultValue>
+                    <CheckExpression>due_price &gt;= GETDATE()</CheckExpression>
                     <Properties/>
                 </Column>
                 <Column Id="c38">
@@ -214,8 +214,8 @@
                     <Type>int</Type>
                     <Description></Description>
                     <Nullable>false</Nullable>
-                    <DefaultValue></DefaultValue>
-                    <CheckExpression></CheckExpression>
+                    <DefaultValue>0</DefaultValue>
+                    <CheckExpression>adult_seats &gt;= 0</CheckExpression>
                     <Properties/>
                 </Column>
                 <Column Id="c75">
@@ -223,8 +223,8 @@
                     <Type>int</Type>
                     <Description></Description>
                     <Nullable>false</Nullable>
-                    <DefaultValue></DefaultValue>
-                    <CheckExpression></CheckExpression>
+                    <DefaultValue>0</DefaultValue>
+                    <CheckExpression>student_seats &gt;= 0</CheckExpression>
                     <Properties/>
                 </Column>
             </Columns>
@@ -268,7 +268,7 @@
                     <Type>bit</Type>
                     <Description></Description>
                     <Nullable>false</Nullable>
-                    <DefaultValue></DefaultValue>
+                    <DefaultValue>0</DefaultValue>
                     <CheckExpression></CheckExpression>
                     <Properties/>
                 </Column>
@@ -325,11 +325,38 @@
         </Table>
         <Table Id="t5">
             <Name>Clients</Name>
-            <Description></Description>
+            <Description>Reprezentuje klientów chcących opłacić miejsca na konferencjach i warsztatach. Klientem może być zarówno firma, jak i osoba prywatna. W zależności od tego dane klienta reprezentowane są przez odpowiednią relację w bazie. </Description>
             <Columns>
                 <Column Id="c1">
                     <Name>id</Name>
                     <Type>int</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c84">
+                    <Name>zip_code</Name>
+                    <Type>varchar(6)</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression>zip_code like '[0-9][0-9]-[0-9][0-9][0-9]' </CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c85">
+                    <Name>city</Name>
+                    <Type>varchar(30)</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression>city not like '%[0-9]%'</CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c86">
+                    <Name>address</Name>
+                    <Type>varchar(100)</Type>
                     <Description></Description>
                     <Nullable>false</Nullable>
                     <DefaultValue></DefaultValue>
@@ -378,7 +405,7 @@
                     <Description></Description>
                     <Nullable>false</Nullable>
                     <DefaultValue></DefaultValue>
-                    <CheckExpression></CheckExpression>
+                    <CheckExpression>name like '^\p{L}+$'</CheckExpression>
                     <Properties/>
                 </Column>
                 <Column Id="c8">
@@ -387,7 +414,7 @@
                     <Description></Description>
                     <Nullable>false</Nullable>
                     <DefaultValue></DefaultValue>
-                    <CheckExpression></CheckExpression>
+                    <CheckExpression>surname like '^\p{L}+$'</CheckExpression>
                     <Properties/>
                 </Column>
                 <Column Id="c74">
@@ -396,7 +423,16 @@
                     <Description></Description>
                     <Nullable>false</Nullable>
                     <DefaultValue></DefaultValue>
-                    <CheckExpression></CheckExpression>
+                    <CheckExpression>email like '%_@__%.__%'</CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c77">
+                    <Name>phone</Name>
+                    <Type>varchar(20)</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression>phone not like '%[^0-9]%'</CheckExpression>
                     <Properties/>
                 </Column>
             </Columns>
@@ -450,7 +486,7 @@
                     <Description></Description>
                     <Nullable>false</Nullable>
                     <DefaultValue></DefaultValue>
-                    <CheckExpression></CheckExpression>
+                    <CheckExpression>end_time &gt;= GETDATE()</CheckExpression>
                     <Properties/>
                 </Column>
                 <Column Id="c28">
@@ -468,7 +504,7 @@
                     <Description></Description>
                     <Nullable>false</Nullable>
                     <DefaultValue></DefaultValue>
-                    <CheckExpression></CheckExpression>
+                    <CheckExpression>price &gt;= 0</CheckExpression>
                     <Properties/>
                 </Column>
                 <Column Id="c31">
@@ -476,8 +512,8 @@
                     <Type>int</Type>
                     <Description></Description>
                     <Nullable>false</Nullable>
-                    <DefaultValue></DefaultValue>
-                    <CheckExpression></CheckExpression>
+                    <DefaultValue>0</DefaultValue>
+                    <CheckExpression>number_of_seats &gt;= 0</CheckExpression>
                     <Properties/>
                 </Column>
             </Columns>
@@ -521,7 +557,7 @@
                     <Type>datetime</Type>
                     <Description></Description>
                     <Nullable>false</Nullable>
-                    <DefaultValue></DefaultValue>
+                    <DefaultValue>GETDATE()</DefaultValue>
                     <CheckExpression></CheckExpression>
                     <Properties/>
                 </Column>
@@ -530,8 +566,8 @@
                     <Type>datetime</Type>
                     <Description></Description>
                     <Nullable>false</Nullable>
-                    <DefaultValue></DefaultValue>
-                    <CheckExpression></CheckExpression>
+                    <DefaultValue>DATEADD(week, 2, GETDATE())</DefaultValue>
+                    <CheckExpression>due_price &gt;= GETDATE()</CheckExpression>
                     <Properties/>
                 </Column>
                 <Column Id="c55">
@@ -539,8 +575,8 @@
                     <Type>int</Type>
                     <Description></Description>
                     <Nullable>false</Nullable>
-                    <DefaultValue></DefaultValue>
-                    <CheckExpression></CheckExpression>
+                    <DefaultValue>0</DefaultValue>
+                    <CheckExpression>nr_of_seats &gt;= 0</CheckExpression>
                     <Properties/>
                 </Column>
                 <Column Id="c61">
@@ -622,16 +658,16 @@
                     <Description></Description>
                     <Nullable>false</Nullable>
                     <DefaultValue></DefaultValue>
-                    <CheckExpression></CheckExpression>
+                    <CheckExpression>nip not like '%[^0-9]%' and LEN(nip) = 10</CheckExpression>
                     <Properties/>
                 </Column>
                 <Column Id="c4">
                     <Name>phone</Name>
-                    <Type>int</Type>
+                    <Type>varchar(20)</Type>
                     <Description></Description>
                     <Nullable>false</Nullable>
                     <DefaultValue></DefaultValue>
-                    <CheckExpression></CheckExpression>
+                    <CheckExpression>phone not like '%[^0-9]%'</CheckExpression>
                     <Properties/>
                 </Column>
                 <Column Id="c5">
@@ -649,7 +685,7 @@
                     <Description></Description>
                     <Nullable>false</Nullable>
                     <DefaultValue></DefaultValue>
-                    <CheckExpression></CheckExpression>
+                    <CheckExpression>email like '%_@__%.__%'</CheckExpression>
                     <Properties/>
                 </Column>
             </Columns>
@@ -659,7 +695,16 @@
                     <Column>c5</Column>
                 </Columns>
             </PrimaryKey>
-            <AlternateKeys/>
+            <AlternateKeys>
+                <AlternateKey Id="a2">
+                    <Name>unique_nip</Name>
+                    <Description></Description>
+                    <Columns>
+                        <Column>c3</Column>
+                    </Columns>
+                    <Properties/>
+                </AlternateKey>
+            </AlternateKeys>
             <Indexes/>
             <TableChecks/>
             <AdditionalSQLBefore></AdditionalSQLBefore>
@@ -702,8 +747,8 @@
                     <Type>decimal(4,4)</Type>
                     <Description></Description>
                     <Nullable>false</Nullable>
-                    <DefaultValue></DefaultValue>
-                    <CheckExpression></CheckExpression>
+                    <DefaultValue>0</DefaultValue>
+                    <CheckExpression>discount &gt;= 0</CheckExpression>
                     <Properties/>
                 </Column>
             </Columns>
@@ -1050,8 +1095,8 @@
     <Texts/>
     <TableDisplays>
         <TableDisplay Id="td1">
-            <X>6440.5</X>
-            <Y>6725.5</Y>
+            <X>6441.5</X>
+            <Y>6723.5</Y>
             <Width>222.0</Width>
             <Height>102.0</Height>
             <LineColor>#000000</LineColor>
@@ -1080,8 +1125,8 @@
             <FixedSize>false</FixedSize>
         </TableDisplay>
         <TableDisplay Id="td4">
-            <X>6457.5</X>
-            <Y>6437.5</Y>
+            <X>6459.5</X>
+            <Y>6440.5</Y>
             <Width>187.0</Width>
             <Height>60.0</Height>
             <LineColor>#000000</LineColor>
@@ -1090,10 +1135,10 @@
             <FixedSize>false</FixedSize>
         </TableDisplay>
         <TableDisplay Id="td5">
-            <X>6795.5</X>
-            <Y>6674.5</Y>
-            <Width>120.0</Width>
-            <Height>60.0</Height>
+            <X>6778.5</X>
+            <Y>6669.5</Y>
+            <Width>161.0</Width>
+            <Height>87.0</Height>
             <LineColor>#000000</LineColor>
             <FillColor>#ffffff</FillColor>
             <Table>t5</Table>
@@ -1101,9 +1146,9 @@
         </TableDisplay>
         <TableDisplay Id="td6">
             <X>6989.5</X>
-            <Y>6700.5</Y>
+            <Y>6694.5</Y>
             <Width>190.0</Width>
-            <Height>102.0</Height>
+            <Height>159.0</Height>
             <LineColor>#000000</LineColor>
             <FillColor>#ffffff</FillColor>
             <Table>t6</Table>
@@ -1120,8 +1165,8 @@
             <FixedSize>false</FixedSize>
         </TableDisplay>
         <TableDisplay Id="td8">
-            <X>6672.5</X>
-            <Y>6924.5</Y>
+            <X>6671.5</X>
+            <Y>6938.5</Y>
             <Width>329.0</Width>
             <Height>130.0</Height>
             <LineColor>#000000</LineColor>
@@ -1140,10 +1185,10 @@
             <FixedSize>false</FixedSize>
         </TableDisplay>
         <TableDisplay Id="td10">
-            <X>6742.5</X>
-            <Y>6784.5</Y>
+            <X>6747.5</X>
+            <Y>6816.5</Y>
             <Width>208.0</Width>
-            <Height>102.0</Height>
+            <Height>106.0</Height>
             <LineColor>#000000</LineColor>
             <FillColor>#ffffff</FillColor>
             <Table>t10</Table>
@@ -1177,16 +1222,16 @@
             <Type>Cross_3CP</Type>
             <ControlPoints>
                 <ControlPoint>
-                    <X>6805.5</X>
-                    <Y>6708.5</Y>
+                    <X>6788.5</X>
+                    <Y>6703.5</Y>
                 </ControlPoint>
                 <ControlPoint>
-                    <X>6851.5</X>
-                    <Y>6708.5</Y>
+                    <X>6856.5</X>
+                    <Y>6703.5</Y>
                 </ControlPoint>
                 <ControlPoint>
-                    <X>6851.5</X>
-                    <Y>6794.5</Y>
+                    <X>6856.5</X>
+                    <Y>6826.5</Y>
                 </ControlPoint>
             </ControlPoints>
             <PkTableDisplay>td5</PkTableDisplay>
@@ -1198,20 +1243,20 @@
             <Type>Vertical_4CP</Type>
             <ControlPoints>
                 <ControlPoint>
-                    <X>6565.5</X>
-                    <Y>6463.5</Y>
+                    <X>6567.5</X>
+                    <Y>6466.5</Y>
                 </ControlPoint>
                 <ControlPoint>
-                    <X>6565.5</X>
+                    <X>6567.5</X>
                     <Y>6676.5</Y>
                 </ControlPoint>
                 <ControlPoint>
-                    <X>6566.5</X>
+                    <X>6567.5</X>
                     <Y>6676.5</Y>
                 </ControlPoint>
                 <ControlPoint>
-                    <X>6566.5</X>
-                    <Y>6757.5</Y>
+                    <X>6567.5</X>
+                    <Y>6755.5</Y>
                 </ControlPoint>
             </ControlPoints>
             <PkTableDisplay>td4</PkTableDisplay>
@@ -1224,7 +1269,7 @@
             <ControlPoints>
                 <ControlPoint>
                     <X>6553.5</X>
-                    <Y>6765.5</Y>
+                    <Y>6763.5</Y>
                 </ControlPoint>
                 <ControlPoint>
                     <X>6553.5</X>
@@ -1240,12 +1285,12 @@
             <Type>Horizontal_4CP</Type>
             <ControlPoints>
                 <ControlPoint>
-                    <X>6518.5</X>
-                    <Y>6735.5</Y>
+                    <X>6519.5</X>
+                    <Y>6733.5</Y>
                 </ControlPoint>
                 <ControlPoint>
                     <X>6479.5</X>
-                    <Y>6735.5</Y>
+                    <Y>6733.5</Y>
                 </ControlPoint>
                 <ControlPoint>
                     <X>6479.5</X>
@@ -1266,7 +1311,7 @@
             <ControlPoints>
                 <ControlPoint>
                     <X>6851.5</X>
-                    <Y>6699.5</Y>
+                    <Y>6694.5</Y>
                 </ControlPoint>
                 <ControlPoint>
                     <X>6851.5</X>
@@ -1299,11 +1344,11 @@
             <Type>Cross_3CP</Type>
             <ControlPoints>
                 <ControlPoint>
-                    <X>6616.5</X>
-                    <Y>6788.5</Y>
+                    <X>6617.5</X>
+                    <Y>6786.5</Y>
                 </ControlPoint>
                 <ControlPoint>
-                    <X>6616.5</X>
+                    <X>6617.5</X>
                     <Y>6586.5</Y>
                 </ControlPoint>
                 <ControlPoint>
@@ -1321,7 +1366,7 @@
             <ControlPoints>
                 <ControlPoint>
                     <X>7076.5</X>
-                    <Y>6763.5</Y>
+                    <Y>6757.5</Y>
                 </ControlPoint>
                 <ControlPoint>
                     <X>7076.5</X>
@@ -1345,7 +1390,7 @@
             <Type>Horizontal_2CP</Type>
             <ControlPoints>
                 <ControlPoint>
-                    <X>6777.5</X>
+                    <X>6776.5</X>
                     <Y>6948.5</Y>
                 </ControlPoint>
                 <ControlPoint>
@@ -1366,7 +1411,7 @@
                     <Y>6965.5</Y>
                 </ControlPoint>
                 <ControlPoint>
-                    <X>6698.5</X>
+                    <X>6697.5</X>
                     <Y>6965.5</Y>
                 </ControlPoint>
             </ControlPoints>
@@ -1380,7 +1425,7 @@
             <ControlPoints>
                 <ControlPoint>
                     <X>7140.5</X>
-                    <Y>6767.5</Y>
+                    <Y>6761.5</Y>
                 </ControlPoint>
                 <ControlPoint>
                     <X>7140.5</X>
@@ -1401,7 +1446,7 @@
                 </ControlPoint>
                 <ControlPoint>
                     <X>6706.5</X>
-                    <Y>6934.5</Y>
+                    <Y>6948.5</Y>
                 </ControlPoint>
             </ControlPoints>
             <PkTableDisplay>td2</PkTableDisplay>
@@ -1434,20 +1479,20 @@
             <Type>Horizontal_4CP</Type>
             <ControlPoints>
                 <ControlPoint>
-                    <X>6897.5</X>
-                    <Y>6710.5</Y>
+                    <X>6880.5</X>
+                    <Y>6705.5</Y>
                 </ControlPoint>
                 <ControlPoint>
                     <X>6959.5</X>
-                    <Y>6710.5</Y>
+                    <Y>6705.5</Y>
                 </ControlPoint>
                 <ControlPoint>
                     <X>6959.5</X>
-                    <Y>6710.5</Y>
+                    <Y>6705.5</Y>
                 </ControlPoint>
                 <ControlPoint>
                     <X>7015.5</X>
-                    <Y>6710.5</Y>
+                    <Y>6705.5</Y>
                 </ControlPoint>
             </ControlPoints>
             <PkTableDisplay>td5</PkTableDisplay>

@@ -1,23 +1,23 @@
 -- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2020-01-08 21:45:49.181
+-- Last modification date: 2020-01-08 22:14:26.269
 
 -- tables
 -- Table: Clients
 CREATE TABLE Clients (
     id int  NOT NULL,
+    zip_code varchar(6)  NOT NULL CHECK (zip_code like '[0-9][0-9]-[0-9][0-9][0-9]' ),
+    city varchar(30)  NOT NULL CHECK (city not like '%[0-9]%'),
+    address varchar(100)  NOT NULL,
     CONSTRAINT Clients_pk PRIMARY KEY  (id)
 );
 
 -- Table: Companies
 CREATE TABLE Companies (
     companyName varchar(100)  NOT NULL,
-    nip varchar(10)  NOT NULL CHECK (nip not like '%[^0-9]%'),
+    nip varchar(10)  NOT NULL CHECK (nip not like '%[^0-9]%' and LEN(nip) = 10),
     phone varchar(20)  NOT NULL CHECK (phone not like '%[^0-9]%'),
     clients_id int  NOT NULL,
     email varchar(100)  NOT NULL CHECK (email like '%_@__%.__%'),
-    zip_code varchar(6)  NOT NULL CHECK (zip_code like '[0-9][0-9]-[0-9][0-9][0-9]'),
-    city varchar(30)  NOT NULL CHECK (city like '^\p{L}+$'),
-    address varchar(100)  NOT NULL,
     CONSTRAINT unique_nip UNIQUE (nip),
     CONSTRAINT Companies_pk PRIMARY KEY  (clients_id)
 );
