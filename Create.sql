@@ -1,6 +1,3 @@
--- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2020-01-08 22:42:47.449
-
 -- tables
 -- Table: Clients
 CREATE TABLE Clients (
@@ -14,7 +11,7 @@ CREATE TABLE Clients (
 -- Table: Companies
 CREATE TABLE Companies (
     companyName varchar(100)  NOT NULL,
-    nip nvarchar(15)  NOT NULL CHECK (nip not like '%[^0-9]%' and LEN(nip) = 10),
+    nip nvarchar(15)  NOT NULL CHECK ((nip not like '%[^0-9]%') and (LEN(nip) = 10) and (nip not like '0%' or nip like '1%')),
     phone varchar(20)  NOT NULL CHECK (phone not like '%[^0-9]%'),
     clients_id int  NOT NULL,
     email varchar(100)  NOT NULL CHECK (email like '%_@__%.__%'),

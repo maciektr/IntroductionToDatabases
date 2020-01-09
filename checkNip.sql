@@ -5,17 +5,42 @@ CREATE FUNCTION IsValidNip
 RETURNS bit
 AS
 BEGIN
-  SELECT @nip = REPLACE(@nip,'-','')
-  IF ISNUMERIC(@nip) = 0
+    IF ISNUMERIC(@nip) = 0 BEGIN
+        RETURN 0
+        END
+
+    IF @nip='0000000000' BEGIN
+        RETURN 0
+        END
+    IF @nip='1234567891' BEGIN
+        RETURN 0
+        END
+    IF @nip='1111111111' BEGIN
+        RETURN 0
+        END
+    IF @nip='1111111112' BEGIN
+        RETURN 0
+        END
+    IF @nip='9999999999' BEGIN
+        RETURN 0
+        END
+    IF @nip='1111111112' BEGIN
+        RETURN 0
+        END
+
+    DECLARE @sum TINYINT;
+    SET @sum = 6 * CONVERT(TINYINT, SUBSTRING(@nip,1,1)) +
+               5 * CONVERT(TINYINT, SUBSTRING(@nip,2,1)) +
+               7 * CONVERT(TINYINT, SUBSTRING(@nip,3,1)) +
+               2 * CONVERT(TINYINT, SUBSTRING(@nip,4,1)) +
+               3 * CONVERT(TINYINT, SUBSTRING(@nip,5,1)) +
+               4 * CONVERT(TINYINT, SUBSTRING(@nip,6,1)) +
+               5 * CONVERT(TINYINT, SUBSTRING(@nip,7,1)) +
+               6 * CONVERT(TINYINT, SUBSTRING(@nip,8,1)) +
+               7 * CONVERT(TINYINT, SUBSTRING(@nip,9,1));
+
+    IF CONVERT(TINYINT,SUBSTRING(@nip,10,1)) = (@sum % 11) BEGIN
+        RETURN 1
+        END
     RETURN 0
-  DECLARE
-    @weights AS TABLE
-    (
-      Position tinyint IDENTITY(1,1) NOT NULL,
-      Weight tinyint NOT NULL
-    )
-  INSERT INTO @weights VALUES (6), (5), (7), (2), (3), (4), (5), (6), (7)
-  IF SUBSTRING(@nip, 10, 1) = (SELECT SUM(CONVERT(TINYINT, SUBSTRING(@nip, Position, 1)) * Weight) % 11 FROM @weights)
-    RETURN 1
-  RETURN 0
 END
