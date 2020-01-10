@@ -14,12 +14,12 @@
         </Counter>
         <Counter>
             <Name>column</Name>
-            <Value>86</Value>
+            <Value>87</Value>
             <Prefix>c</Prefix>
         </Counter>
         <Counter>
             <Name>index</Name>
-            <Value>0</Value>
+            <Value>1</Value>
             <Prefix>i</Prefix>
         </Counter>
         <Counter>
@@ -29,7 +29,7 @@
         </Counter>
         <Counter>
             <Name>table_check</Name>
-            <Value>0</Value>
+            <Value>1</Value>
             <Prefix>tc</Prefix>
         </Counter>
         <Counter>
@@ -99,7 +99,12 @@
                     <Nullable>false</Nullable>
                     <DefaultValue></DefaultValue>
                     <CheckExpression></CheckExpression>
-                    <Properties/>
+                    <Properties>
+                        <Property>
+                            <Name>identity</Name>
+                            <Value>true</Value>
+                        </Property>
+                    </Properties>
                 </Column>
                 <Column Id="c13">
                     <Name>conference_id</Name>
@@ -162,7 +167,12 @@
                     <Nullable>false</Nullable>
                     <DefaultValue></DefaultValue>
                     <CheckExpression></CheckExpression>
-                    <Properties/>
+                    <Properties>
+                        <Property>
+                            <Name>identity</Name>
+                            <Value>true</Value>
+                        </Property>
+                    </Properties>
                 </Column>
                 <Column Id="c43">
                     <Name>conference_day_id</Name>
@@ -298,7 +308,12 @@
                     <Nullable>false</Nullable>
                     <DefaultValue></DefaultValue>
                     <CheckExpression></CheckExpression>
-                    <Properties/>
+                    <Properties>
+                        <Property>
+                            <Name>identity</Name>
+                            <Value>true</Value>
+                        </Property>
+                    </Properties>
                 </Column>
                 <Column Id="c71">
                     <Name>name</Name>
@@ -334,7 +349,12 @@
                     <Nullable>false</Nullable>
                     <DefaultValue></DefaultValue>
                     <CheckExpression></CheckExpression>
-                    <Properties/>
+                    <Properties>
+                        <Property>
+                            <Name>identity</Name>
+                            <Value>true</Value>
+                        </Property>
+                    </Properties>
                 </Column>
                 <Column Id="c84">
                     <Name>zip_code</Name>
@@ -342,7 +362,7 @@
                     <Description></Description>
                     <Nullable>false</Nullable>
                     <DefaultValue></DefaultValue>
-                    <CheckExpression>zip_code like '[0-9][0-9]-[0-9][0-9][0-9]' </CheckExpression>
+                    <CheckExpression></CheckExpression>
                     <Properties/>
                 </Column>
                 <Column Id="c85">
@@ -351,7 +371,7 @@
                     <Description></Description>
                     <Nullable>false</Nullable>
                     <DefaultValue></DefaultValue>
-                    <CheckExpression>city not like '%[0-9]%'</CheckExpression>
+                    <CheckExpression></CheckExpression>
                     <Properties/>
                 </Column>
                 <Column Id="c86">
@@ -388,7 +408,12 @@
                     <Nullable>false</Nullable>
                     <DefaultValue></DefaultValue>
                     <CheckExpression></CheckExpression>
-                    <Properties/>
+                    <Properties>
+                        <Property>
+                            <Name>identity</Name>
+                            <Value>true</Value>
+                        </Property>
+                    </Properties>
                 </Column>
                 <Column Id="c6">
                     <Name>clients_id</Name>
@@ -405,7 +430,7 @@
                     <Description></Description>
                     <Nullable>false</Nullable>
                     <DefaultValue></DefaultValue>
-                    <CheckExpression>name like '^\p{L}+$'</CheckExpression>
+                    <CheckExpression></CheckExpression>
                     <Properties/>
                 </Column>
                 <Column Id="c8">
@@ -414,7 +439,7 @@
                     <Description></Description>
                     <Nullable>false</Nullable>
                     <DefaultValue></DefaultValue>
-                    <CheckExpression>surname like '^\p{L}+$'</CheckExpression>
+                    <CheckExpression></CheckExpression>
                     <Properties/>
                 </Column>
                 <Column Id="c74">
@@ -460,7 +485,12 @@
                     <Nullable>false</Nullable>
                     <DefaultValue></DefaultValue>
                     <CheckExpression></CheckExpression>
-                    <Properties/>
+                    <Properties>
+                        <Property>
+                            <Name>identity</Name>
+                            <Value>true</Value>
+                        </Property>
+                    </Properties>
                 </Column>
                 <Column Id="c17">
                     <Name>conference_day_id</Name>
@@ -541,7 +571,12 @@
                     <Nullable>false</Nullable>
                     <DefaultValue></DefaultValue>
                     <CheckExpression></CheckExpression>
-                    <Properties/>
+                    <Properties>
+                        <Property>
+                            <Name>identity</Name>
+                            <Value>true</Value>
+                        </Property>
+                    </Properties>
                 </Column>
                 <Column Id="c51">
                     <Name>workshop_id</Name>
@@ -654,11 +689,11 @@
                 </Column>
                 <Column Id="c3">
                     <Name>nip</Name>
-                    <Type>varchar(10)</Type>
+                    <Type>nvarchar(15)</Type>
                     <Description></Description>
                     <Nullable>false</Nullable>
                     <DefaultValue></DefaultValue>
-                    <CheckExpression>nip not like '%[^0-9]%' and LEN(nip) = 10</CheckExpression>
+                    <CheckExpression>(nip not like '%[^0-9]%') and (LEN(nip) = 10) and (nip not like '0%' or nip like '1%')</CheckExpression>
                     <Properties/>
                 </Column>
                 <Column Id="c4">
@@ -706,7 +741,14 @@
                 </AlternateKey>
             </AlternateKeys>
             <Indexes/>
-            <TableChecks/>
+            <TableChecks>
+                <TableCheck Id="tc1">
+                    <Name>checkNip</Name>
+                    <Description></Description>
+                    <CheckExpression>dbo.IsValidNip(nip) = 1</CheckExpression>
+                    <Properties/>
+                </TableCheck>
+            </TableChecks>
             <AdditionalSQLBefore></AdditionalSQLBefore>
             <AdditionalSQLAfter></AdditionalSQLAfter>
             <Properties/>
@@ -722,7 +764,12 @@
                     <Nullable>false</Nullable>
                     <DefaultValue></DefaultValue>
                     <CheckExpression></CheckExpression>
-                    <Properties/>
+                    <Properties>
+                        <Property>
+                            <Name>identity</Name>
+                            <Value>true</Value>
+                        </Property>
+                    </Properties>
                 </Column>
                 <Column Id="c19">
                     <Name>conference_day_id</Name>
@@ -748,7 +795,7 @@
                     <Description></Description>
                     <Nullable>false</Nullable>
                     <DefaultValue>0</DefaultValue>
-                    <CheckExpression>discount &gt;= 0</CheckExpression>
+                    <CheckExpression></CheckExpression>
                     <Properties/>
                 </Column>
             </Columns>
@@ -776,7 +823,12 @@
                     <Nullable>false</Nullable>
                     <DefaultValue></DefaultValue>
                     <CheckExpression></CheckExpression>
-                    <Properties/>
+                    <Properties>
+                        <Property>
+                            <Name>identity</Name>
+                            <Value>true</Value>
+                        </Property>
+                    </Properties>
                 </Column>
                 <Column Id="c66">
                     <Name>reservation_id</Name>
@@ -1185,7 +1237,7 @@
             <FixedSize>false</FixedSize>
         </TableDisplay>
         <TableDisplay Id="td10">
-            <X>6747.5</X>
+            <X>6746.5</X>
             <Y>6816.5</Y>
             <Width>208.0</Width>
             <Height>106.0</Height>
@@ -1205,10 +1257,10 @@
             <FixedSize>false</FixedSize>
         </TableDisplay>
         <TableDisplay Id="td13">
-            <X>6663.5</X>
-            <Y>6351.5</Y>
+            <X>6664.5</X>
+            <Y>6342.5</Y>
             <Width>315.0</Width>
-            <Height>87.0</Height>
+            <Height>102.0</Height>
             <LineColor>#000000</LineColor>
             <FillColor>#ffffff</FillColor>
             <Table>t13</Table>
@@ -1226,11 +1278,11 @@
                     <Y>6703.5</Y>
                 </ControlPoint>
                 <ControlPoint>
-                    <X>6856.5</X>
+                    <X>6855.5</X>
                     <Y>6703.5</Y>
                 </ControlPoint>
                 <ControlPoint>
-                    <X>6856.5</X>
+                    <X>6855.5</X>
                     <Y>6826.5</Y>
                 </ControlPoint>
             </ControlPoints>
@@ -1463,11 +1515,11 @@
                 </ControlPoint>
                 <ControlPoint>
                     <X>6840.5</X>
-                    <Y>6386.5</Y>
+                    <Y>6377.5</Y>
                 </ControlPoint>
                 <ControlPoint>
-                    <X>6745.5</X>
-                    <Y>6386.5</Y>
+                    <X>6746.5</X>
+                    <Y>6377.5</Y>
                 </ControlPoint>
             </ControlPoints>
             <PkTableDisplay>td2</PkTableDisplay>

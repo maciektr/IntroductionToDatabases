@@ -2,8 +2,8 @@
 -- Table: Clients
 CREATE TABLE Clients (
     id int  NOT NULL IDENTITY,
-    zip_code varchar(6)  NOT NULL CHECK (zip_code like '[0-9][0-9]-[0-9][0-9][0-9]' ),
-    city varchar(30)  NOT NULL CHECK (city not like '%[0-9]%'),
+    zip_code varchar(6)  NOT NULL,
+    city varchar(30)  NOT NULL,
     address varchar(100)  NOT NULL,
     CONSTRAINT Clients_pk PRIMARY KEY  (id)
 );
@@ -63,7 +63,7 @@ CREATE TABLE Early_signup_discounts (
     discount_id int  NOT NULL IDENTITY,
     conference_day_id int  NOT NULL,
     end_date datetime  NOT NULL,
-    discount decimal(4,4)  NOT NULL DEFAULT 0 CHECK (discount >= 0),
+    discount decimal(4,4)  NOT NULL DEFAULT 0,
     CONSTRAINT Early_signup_discounts_pk PRIMARY KEY  (discount_id)
 );
 
@@ -71,8 +71,8 @@ CREATE TABLE Early_signup_discounts (
 CREATE TABLE Participants (
     participant_id int  NOT NULL IDENTITY,
     clients_id int  NOT NULL,
-    name varchar(100)  NOT NULL CHECK (name like '^\p{L}+$'),
-    surname varchar(100)  NOT NULL CHECK (surname like '^\p{L}+$'),
+    name varchar(100)  NOT NULL,
+    surname varchar(100)  NOT NULL,
     email varchar(100)  NOT NULL CHECK (email like '%_@__%.__%'),
     phone varchar(20)  NOT NULL CHECK (phone not like '%[^0-9]%'),
     CONSTRAINT Participants_pk PRIMARY KEY  (participant_id)
