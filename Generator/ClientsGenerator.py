@@ -4,11 +4,11 @@ from faker import Faker
 
 
 class ClientsGenerator:
-    def __init__(self, id=0):
+    def __init__(self, id=0, pgen=None):
         self.start_id = id
         self.faker = Faker(['pl_PL'])
         self.rand = random.Random()
-        self.part_gen = ParticipantsGenerator.ParticipantsGenerator()
+        self.part_gen = ParticipantsGenerator.ParticipantsGenerator() if pgen is None else pgen
         self.first_id = self.start_id + 1
 
     def get_clients_ids(self):
