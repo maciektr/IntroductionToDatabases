@@ -14,6 +14,9 @@ class ClientsGenerator:
     def get_clients_ids(self):
         return [i for i in range(self.first_id, self.start_id + 1)]
 
+    def get_participants_generator(self):
+        return self.part_gen
+
     def random_nip(self):
         res = ''
         sum = 0
@@ -50,6 +53,13 @@ class ClientsGenerator:
                      "VALUES (" + str(self.start_id) + ",\'" + zip_code + "\',\'" + city + "\',\'" + address + "\')"
 
         # res = 'SET IDENTITY_INSERT Clients ON\n'
-        res = client_sql + "\n" + (self.get_random_company_as_sql(self.start_id) if self.rand.randint(0,1) == 0 else self.part_gen.get_random_participant_as_sql(self.start_id))
-        # res += '\nSET IDENTITY_INSERT Clients OFF'
+        res = client_sql + "\n"
+        if self.rand.randint(0, 1) == 0:
+              res+= self.get_random_company_as_sql(self.start_id)
+        else:
+            res += 'SET IDENTITY_INSERT Clients OFF'
+            res += '\nSET IDENTITY_INSERT Participants ON'
+            res+='\n'+self.part_gen.get_random_participant_as_sql(self.start_id)
+            res += '\nSET IDENTITY_INSERT Participants OFF'
+            res += '\nSET IDENTITY_INSERT Clients ON'
         return res

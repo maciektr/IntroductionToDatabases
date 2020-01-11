@@ -1,7 +1,6 @@
 import random
 from faker import Faker
 from datetime import datetime, timedelta, time
-import math
 
 
 class ConferencesGenerator:
@@ -17,7 +16,7 @@ class ConferencesGenerator:
         self.first_id = self.start_conf_id + 1
         self.discounts = []
         self.stud_discount = 0
-        self.price= 0
+        self.price = 0
 
     def get_confs_ids(self):
         return [i for i in range(self.first_id, self.start_conf_id + 1)]
@@ -51,6 +50,8 @@ class ConferencesGenerator:
         res = "INSERT INTO Workshops (workshop_id, conference_day_id, start_time, end_time, topic, price, number_of_seats) VALUES (" + str(
             self.start_workshop_id) + "," + str(day_id) + ",\'" + str(start) + "\',\'" + str(
             end) + "\',\'" + topic + "\',\'" + price + "\',\'" + str(numb_seats) + "\')"
+
+
         return res
 
     def get_random_discounts(self, conf_id, conf_date):
@@ -80,7 +81,8 @@ class ConferencesGenerator:
         numb_payments = self.rand.randint(1, 5)
         if numb_payments == 1:
             in_date = self.faker.date_between(start_date=date_start, end_date=date_end)
-            return "\nINSERT INTO Payments (reservation_id, in_date, value) VALUES ("+str(res_id)+",\'"+str(in_date)+"\',"+str(price)+")"
+            return "\nINSERT INTO Payments (reservation_id, in_date, value) VALUES (" + str(res_id) + ",\'" + str(
+                in_date) + "\'," + str(price) + ")"
 
         values = [price // numb_payments for _ in range(numb_payments)]
         i = 0
@@ -90,32 +92,49 @@ class ConferencesGenerator:
         values[0] += (price - int(price))
 
         for i in range(len(values)):
-            k = self.rand.randint(1,price//5)
-            values[i]+=k
-            values[(i+1)%len(values)]-=k
+            k = self.rand.randint(1, price // 5)
+            values[i] += k
+            values[(i + 1) % len(values)] -= k
         res = ''
         for v in values:
             in_date = self.faker.date_between(start_date=date_start, end_date=date_end)
-            res+='\n'
-            res+="INSERT INTO Payments (reservation_id, in_date, value) VALUES ("+str(res_id)+",\'"+str(in_date)+"\',"+str(round(v,2))+")"
+            res += '\n'
+            res += "INSERT INTO Payments (reservation_id, in_date, value) VALUES (" + str(res_id) + ",\'" + str(
+                in_date) + "\'," + str(round(v, 2)) + ")"
         return res
 
+    def get_random_registrations(self, res_id, adults, studs):
+        res = ''
+        participants = set(self.clients_generator.get_participants_generator().get_participants_ids())
+        for _ in range(adults):
+            part = self.rand.sample(participants,1)[0]
+            participants.remove(part)
+            res += "\nINSERT INTO Conference_day_registration (reservation_id, Participant_id, is_student) VALUES (" + str(
+                res_id) + "," + str(part) + ",0)"
+        for _ in range(studs):
+            part = self.rand.sample(participants,1)[0]
+            participants.remove(part)
+            res += "\nINSERT INTO Conference_day_registration (reservation_id, Participant_id, is_student) VALUES (" + str(
+                res_id) + "," + str(part) + ",1)"
+        return res
 
     def get_random_conf_reservation(self, day_id, day):
         self.start_res_id += 1
         cl_id = self.rand.choice(self.clients_generator.get_clients_ids())
-        res_date = self.faker.date_between(start_date='-3y', end_date=day)
+        res_date = self.faker.date_between(start_date=datetime.today(), end_date=day)
         active = self.rand.randint(0, 1)
         due_price = self.faker.date_between(start_date=res_date, end_date=day)
-        adult_seats = self.rand.randint(1, 20)
-        student_seats = self.rand.randint(1, 20)
+        adult_seats = self.rand.randint(0,len(self.clients_generator.get_participants_generator().get_participants_ids()))
+        student_seats = self.rand.randint(0, len(self.clients_generator.get_participants_generator().get_participants_ids()) - adult_seats)
 
         res = "INSERT INTO Conference_day_reservations (reservation_id, conference_day_id, clients_id, reservation_date, active, due_price, adult_seats, student_seats) VALUES (" + str(
             self.start_res_id) + "," + str(day_id) + "," + str(cl_id) + ",\'" + str(res_date) + "\',\'" + str(
             active) + "\',\'" + str(due_price) + "\',\'" + str(adult_seats) + "\',\'" + str(student_seats) + "\')"
 
         price = self.reservation_price(adult_seats, student_seats, res_date)
-        res += self.get_random_payments(price,self.start_res_id, res_date,due_price)
+        res += self.get_random_payments(price, self.start_res_id, res_date, due_price)
+        res += self.get_random_registrations(self.start_res_id, adult_seats, student_seats)
+
         return res
 
     def get_random_conference_as_sql(self):
