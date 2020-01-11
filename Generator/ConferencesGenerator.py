@@ -19,7 +19,6 @@ class ConferencesGenerator:
         self.stud_discount = 0
         self.price = 0
         self.price_workshops = 0
-    #     TODO: Ogarnac zeby paymentsy uzwglednialy warsztaty
 
     def get_confs_ids(self):
         return [i for i in range(self.first_id, self.start_conf_id + 1)]
@@ -38,19 +37,28 @@ class ConferencesGenerator:
     def random_time(self, date):
         return datetime.combine(date, time(self.rand.randint(0, 23), self.rand.randint(0, 59)))
 
+    def get_random_workshop_reg(self, res_id, seats):
+        res = ''
+        participants = set(self.clients_generator.get_participants_generator().get_participants_ids())
+        for _ in range(seats):
+            part = self.rand.sample(participants, 1)[0]
+            participants.remove(part)
+            res += "\nINSERT INTO Workshop_registration (reservation_id, Participant_id) VALUES (" + str(
+                res_id) + "," + str(part) + ")"
+        return res
+
     def get_random_workshop_reservation(self, work_id, day, w_price):
         self.start_workshop_res += 1
         res_date = self.faker.date_between(start_date=datetime.today(), end_date=day)
         due_price = self.faker.date_between(start_date=res_date, end_date=day)
-        seats = self.rand.randint(0,len(self.clients_generator.get_participants_generator().get_participants_ids()))
+        seats = self.rand.randint(0, len(self.clients_generator.get_participants_generator().get_participants_ids()))
 
         res = "INSERT INTO Workshop_reservations (reservation_id, workshop_id, reservation_date, due_price, nr_of_seats) VALUES (" + str(
-            self.start_workshop_res) + "," + str(work_id) + "," + str(res_date) + ",\'" + str(due_price) +"\'," + str(seats) + ")"
+            self.start_workshop_res) + "," + str(work_id) + "," + str(res_date) + ",\'" + str(due_price) + "\'," + str(
+            seats) + ")"
 
         self.price_workshops += seats * w_price
-        # price = self.reservation_price(adult_seats, student_seats, res_date)
-        # res += self.get_random_payments(price, self.start_res_id, res_date, due_price)
-        # res += self.get_random_registrations(self.start_res_id, adult_seats, student_seats)
+        res += self.get_random_workshop_reg(self.start_workshop_res, seats)
 
         return res
 
@@ -71,7 +79,7 @@ class ConferencesGenerator:
             self.start_workshop_id) + "," + str(day_id) + ",\'" + str(start) + "\',\'" + str(
             end) + "\',\'" + topic + "\',\'" + str(price) + "\',\'" + str(numb_seats) + "\')"
 
-        #wiele
+        # wiele
         numb_of_res = self.rand.randint(1, len(self.clients_generator.get_clients_ids()))
         res += '\nSET IDENTITY_INSERT  Workshops OFF'
         res += '\nSET IDENTITY_INSERT  Workshop_reservations ON'
@@ -102,6 +110,7 @@ class ConferencesGenerator:
         price = self.price
         price += adult_seats * (1 - self.discounts[i - 1][1])
         price += student_seats * (1 - self.discounts[i - 1][1]) * (1 - self.stud_discount)
+        price += self.price_workshops
         return price
 
     def get_random_payments(self, price, res_id, date_start, date_end):
@@ -146,6 +155,7 @@ class ConferencesGenerator:
         return res
 
     def get_random_conf_reservation(self, day_id, day):
+        self.price_workshops = 0
         self.start_res_id += 1
         cl_id = self.rand.choice(self.clients_generator.get_clients_ids())
         res_date = self.faker.date_between(start_date=datetime.today(), end_date=day)
