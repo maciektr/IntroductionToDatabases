@@ -1,3 +1,6 @@
+-- Created by Vertabelo (http://vertabelo.com)
+-- Last modification date: 2020-01-11 19:45:30.575
+
 -- foreign keys
 ALTER TABLE Companies DROP CONSTRAINT Companies_Clients;
 
@@ -20,8 +23,6 @@ ALTER TABLE Payments DROP CONSTRAINT Payments_Conference_day_reservations;
 ALTER TABLE Workshop_registration DROP CONSTRAINT Workshop_registration_Participants;
 
 ALTER TABLE Workshop_registration DROP CONSTRAINT Workshop_registration_Workshop_reservations;
-
-ALTER TABLE Workshop_reservations DROP CONSTRAINT Workshop_reservations_Conference_day_reservations;
 
 ALTER TABLE Workshop_reservations DROP CONSTRAINT Workshop_reservations_Workshops;
 

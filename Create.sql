@@ -1,3 +1,6 @@
+-- Created by Vertabelo (http://vertabelo.com)
+-- Last modification date: 2020-01-11 19:45:30.575
+
 -- tables
 -- Table: Clients
 CREATE TABLE Clients (
@@ -101,7 +104,6 @@ CREATE TABLE Workshop_reservations (
     reservation_date datetime  NOT NULL DEFAULT GETDATE(),
     due_price datetime  NOT NULL DEFAULT DATEADD(week, 2, GETDATE()) CHECK (due_price >= GETDATE()),
     nr_of_seats int  NOT NULL DEFAULT 0 CHECK (nr_of_seats >= 0),
-    Conference_day_reservations_reservation_id int  NOT NULL,
     CONSTRAINT Workshop_reservations_pk PRIMARY KEY  (reservation_id)
 );
 
@@ -172,11 +174,6 @@ ALTER TABLE Workshop_registration ADD CONSTRAINT Workshop_registration_Participa
 ALTER TABLE Workshop_registration ADD CONSTRAINT Workshop_registration_Workshop_reservations
     FOREIGN KEY (reservation_id)
     REFERENCES Workshop_reservations (reservation_id);
-
--- Reference: Workshop_reservations_Conference_day_reservations (table: Workshop_reservations)
-ALTER TABLE Workshop_reservations ADD CONSTRAINT Workshop_reservations_Conference_day_reservations
-    FOREIGN KEY (Conference_day_reservations_reservation_id)
-    REFERENCES Conference_day_reservations (reservation_id);
 
 -- Reference: Workshop_reservations_Workshops (table: Workshop_reservations)
 ALTER TABLE Workshop_reservations ADD CONSTRAINT Workshop_reservations_Workshops
