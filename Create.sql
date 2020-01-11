@@ -12,7 +12,7 @@ CREATE TABLE Clients (
 CREATE TABLE Companies (
     companyName varchar(100)  NOT NULL,
     nip nvarchar(15)  NOT NULL CHECK ((nip not like '%[^0-9]%') and (LEN(nip) = 10) and (nip not like '0%' or nip like '1%')),
-    phone varchar(20)  NOT NULL CHECK (phone not like '%[^0-9]%'),
+    phone varchar(20)  NOT NULL,
     clients_id int  NOT NULL,
     email varchar(100)  NOT NULL CHECK (email like '%_@__%.__%'),
     CONSTRAINT unique_nip UNIQUE (nip),
