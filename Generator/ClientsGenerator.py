@@ -1,20 +1,14 @@
 import random
-import requests
 import ParticipantsGenerator
+from faker import Faker
 
 
 class ClientsGenerator:
-    def __init__(self, id=0, api="https://api.namefake.com/polish-poland/random"):
+    def __init__(self, id=0):
         self.start_id = id
-        self.api = api
+        self.faker = Faker(['pl_PL'])
         self.rand = random.Random()
         self.part_gen = ParticipantsGenerator.ParticipantsGenerator()
-
-    def get_api_resp(self):
-        resp = requests.get(self.api)
-        if resp.status_code != 200:
-            raise BaseException('ApiError: GET /api.namefake.com/ {}'.format(resp.status_code))
-        return resp
 
     def random_nip(self):
         res = ''
@@ -33,22 +27,20 @@ class ClientsGenerator:
         return res
 
     def get_random_company_as_sql(self, clients_id=0):
-        resp = self.get_api_resp()
-        name = resp.json()['company']
-        phone = resp.json()['phone_w'].replace(' ','')
-        email = resp.json()['email_u'] + '@' + resp.json()['email_d']
+
+        name = self.faker.company()
+        phone = self.faker.phone_number()
+        email = self.faker.email()
         nip = self.random_nip()
-        return "INSERT INTO COMPANIES (companyName, nip, phone, clients_id, email)" \
-               "VALUES (\'" + name + "\',\'" + nip +"\',\'" + phone + "\',\'" + str(clients_id) + "\',\'" + email + "\')"
+        return "INSERT INTO COMPANIES (companyName, nip, phone, clients_id, email) VALUES (\'" + name + "\',\'" + nip +"\',\'" + phone + "\',\'" + str(clients_id) + "\',\'" + email + "\')"
 
     def get_random_client_as_sql(self):
-        resp = self.get_api_resp()
-        address = resp.json()['address'].split('+,')[0]
-        zip_code = resp.json()['address'].split(',')[-1].split(' ')[1]
-        city = ' '.join(resp.json()['address'].split(',')[-1].split(' ')[2:])
+        add = self.faker.address().split('\n')
+        address = add[0]
+        zip_code = add[-1].split(' ')[0]
+        city = ' '.join(add[-1].split(' ')[1:])
         self.start_id += 1
         client_sql = "INSERT INTO CLIENTS (id,zip_code, city, address) " \
                      "VALUES (\'" + str(self.start_id) + "\',\'" + zip_code + "\',\'" + city + "\',\'" + address + "\')"
 
         return client_sql + "\n" + (self.get_random_company_as_sql(self.start_id) if self.rand.randint(0,1) == 0 else self.part_gen.get_random_participant_as_sql(self.start_id))
-
