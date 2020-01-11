@@ -15,5 +15,6 @@ class ParticipantsGenerator:
         phone = self.faker.phone_number()
         email = self.faker.email()
         res = "INSERT INTO Participants (clients_id, name, surname, email, phone) " \
-              "VALUES (\'" + str(clients_id)+ "\',\'" + name + "\',\'" + surname + "\',\'" + email + "\',\'" + phone + "\')"
+              "VALUES (\'" + str(
+            clients_id) + "\',\'" + name + "\',\'" + surname + "\',\'" + email + "\',\'" + phone + "\')"
         return res

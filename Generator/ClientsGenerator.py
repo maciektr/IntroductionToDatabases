@@ -32,7 +32,8 @@ class ClientsGenerator:
         phone = self.faker.phone_number()
         email = self.faker.email()
         nip = self.random_nip()
-        return "INSERT INTO COMPANIES (companyName, nip, phone, clients_id, email) VALUES (\'" + name + "\',\'" + nip +"\',\'" + phone + "\',\'" + str(clients_id) + "\',\'" + email + "\')"
+        return "INSERT INTO COMPANIES (companyName, nip, phone, clients_id, email) VALUES (\'" + name + "\',\'" + nip + "\',\'" + phone + "\',\'" + str(
+            clients_id) + "\',\'" + email + "\')"
 
     def get_random_client_as_sql(self):
         add = self.faker.address().split('\n')
@@ -43,4 +44,6 @@ class ClientsGenerator:
         client_sql = "INSERT INTO CLIENTS (id,zip_code, city, address) " \
                      "VALUES (\'" + str(self.start_id) + "\',\'" + zip_code + "\',\'" + city + "\',\'" + address + "\')"
 
-        return client_sql + "\n" + (self.get_random_company_as_sql(self.start_id) if self.rand.randint(0,1) == 0 else self.part_gen.get_random_participant_as_sql(self.start_id))
+        return client_sql + "\n" + (self.get_random_company_as_sql(self.start_id) if self.rand.randint(0,
+                                                                                                       1) == 0 else self.part_gen.get_random_participant_as_sql(
+            self.start_id))
