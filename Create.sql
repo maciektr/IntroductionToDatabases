@@ -74,7 +74,7 @@ CREATE TABLE Participants (
     name varchar(100)  NOT NULL,
     surname varchar(100)  NOT NULL,
     email varchar(100)  NOT NULL CHECK (email like '%_@__%.__%'),
-    phone varchar(20)  NOT NULL CHECK (phone not like '%[^0-9]%'),
+    phone varchar(20)  NOT NULL,
     CONSTRAINT Participants_pk PRIMARY KEY  (participant_id)
 );
 
