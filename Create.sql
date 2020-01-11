@@ -1,5 +1,5 @@
 -- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2020-01-11 19:45:30.575
+-- Last modification date: 2020-01-11 20:52:36.61
 
 -- tables
 -- Table: Clients
@@ -73,7 +73,7 @@ CREATE TABLE Early_signup_discounts (
 -- Table: Participants
 CREATE TABLE Participants (
     participant_id int  NOT NULL IDENTITY,
-    clients_id int  NOT NULL,
+    clients_id int  NULL DEFAULT Null,
     name varchar(100)  NOT NULL,
     surname varchar(100)  NOT NULL,
     email varchar(100)  NOT NULL CHECK (email like '%_@__%.__%'),
