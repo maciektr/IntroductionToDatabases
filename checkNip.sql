@@ -28,19 +28,21 @@ BEGIN
         RETURN 0
         END
 
-    DECLARE @sum TINYINT;
-    SET @sum = 6 * CONVERT(TINYINT, SUBSTRING(@nip,1,1)) +
-               5 * CONVERT(TINYINT, SUBSTRING(@nip,2,1)) +
-               7 * CONVERT(TINYINT, SUBSTRING(@nip,3,1)) +
-               2 * CONVERT(TINYINT, SUBSTRING(@nip,4,1)) +
-               3 * CONVERT(TINYINT, SUBSTRING(@nip,5,1)) +
-               4 * CONVERT(TINYINT, SUBSTRING(@nip,6,1)) +
-               5 * CONVERT(TINYINT, SUBSTRING(@nip,7,1)) +
-               6 * CONVERT(TINYINT, SUBSTRING(@nip,8,1)) +
-               7 * CONVERT(TINYINT, SUBSTRING(@nip,9,1));
+    DECLARE @sum INT;
+    SET @sum = 6 * CONVERT(INT, SUBSTRING(@nip,1,1)) +
+               5 * CONVERT(INT, SUBSTRING(@nip,2,1)) +
+               7 * CONVERT(INT, SUBSTRING(@nip,3,1)) +
+               2 * CONVERT(INT, SUBSTRING(@nip,4,1)) +
+               3 * CONVERT(INT, SUBSTRING(@nip,5,1)) +
+               4 * CONVERT(INT, SUBSTRING(@nip,6,1)) +
+               5 * CONVERT(INT, SUBSTRING(@nip,7,1)) +
+               6 * CONVERT(INT, SUBSTRING(@nip,8,1)) +
+               7 * CONVERT(INT, SUBSTRING(@nip,9,1));
 
     IF CONVERT(TINYINT,SUBSTRING(@nip,10,1)) = (@sum % 11) BEGIN
         RETURN 1
         END
     RETURN 0
 END
+
+-- drop function IsValidNip
