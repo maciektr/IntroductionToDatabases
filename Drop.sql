@@ -21,8 +21,6 @@ ALTER TABLE Workshop_registration DROP CONSTRAINT Workshop_registration_Particip
 
 ALTER TABLE Workshop_registration DROP CONSTRAINT Workshop_registration_Workshop_reservations;
 
-ALTER TABLE Workshop_reservations DROP CONSTRAINT Workshop_reservations_Conference_day_reservations;
-
 ALTER TABLE Workshop_reservations DROP CONSTRAINT Workshop_reservations_Workshops;
 
 ALTER TABLE Workshops DROP CONSTRAINT Workshops_Conference_days;

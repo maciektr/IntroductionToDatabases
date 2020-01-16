@@ -12,7 +12,7 @@ CREATE TABLE Clients (
 CREATE TABLE Companies (
     companyName varchar(100)  NOT NULL,
     nip nvarchar(15)  NOT NULL CHECK ((nip not like '%[^0-9]%') and (LEN(nip) = 10) and (nip not like '0%' or nip like '1%')),
-    phone varchar(20)  NOT NULL CHECK (phone not like '%[^0-9]%'),
+    phone varchar(20)  NOT NULL,
     clients_id int  NOT NULL,
     email varchar(100)  NOT NULL CHECK (email like '%_@__%.__%'),
     CONSTRAINT unique_nip UNIQUE (nip),
@@ -70,11 +70,11 @@ CREATE TABLE Early_signup_discounts (
 -- Table: Participants
 CREATE TABLE Participants (
     participant_id int  NOT NULL IDENTITY,
-    clients_id int  NOT NULL,
+    clients_id int  NULL DEFAULT Null,
     name varchar(100)  NOT NULL,
     surname varchar(100)  NOT NULL,
     email varchar(100)  NOT NULL CHECK (email like '%_@__%.__%'),
-    phone varchar(20)  NOT NULL CHECK (phone not like '%[^0-9]%'),
+    phone varchar(20)  NOT NULL,
     CONSTRAINT Participants_pk PRIMARY KEY  (participant_id)
 );
 
@@ -101,7 +101,6 @@ CREATE TABLE Workshop_reservations (
     reservation_date datetime  NOT NULL DEFAULT GETDATE(),
     due_price datetime  NOT NULL DEFAULT DATEADD(week, 2, GETDATE()) CHECK (due_price >= GETDATE()),
     nr_of_seats int  NOT NULL DEFAULT 0 CHECK (nr_of_seats >= 0),
-    Conference_day_reservations_reservation_id int  NOT NULL,
     CONSTRAINT Workshop_reservations_pk PRIMARY KEY  (reservation_id)
 );
 
@@ -172,11 +171,6 @@ ALTER TABLE Workshop_registration ADD CONSTRAINT Workshop_registration_Participa
 ALTER TABLE Workshop_registration ADD CONSTRAINT Workshop_registration_Workshop_reservations
     FOREIGN KEY (reservation_id)
     REFERENCES Workshop_reservations (reservation_id);
-
--- Reference: Workshop_reservations_Conference_day_reservations (table: Workshop_reservations)
-ALTER TABLE Workshop_reservations ADD CONSTRAINT Workshop_reservations_Conference_day_reservations
-    FOREIGN KEY (Conference_day_reservations_reservation_id)
-    REFERENCES Conference_day_reservations (reservation_id);
 
 -- Reference: Workshop_reservations_Workshops (table: Workshop_reservations)
 ALTER TABLE Workshop_reservations ADD CONSTRAINT Workshop_reservations_Workshops
