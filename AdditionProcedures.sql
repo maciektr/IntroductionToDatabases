@@ -26,7 +26,7 @@ CREATE PROCEDURE AddClient @ZipCode varchar(6), @City varchar(30), @Address varc
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Clients(zip_code, city, address) -- TODO autoincr?
+    INSERT INTO Clients(zip_code, city, address)
     VALUES (@ZipCode, @City, @Address)
 END
 GO
@@ -62,7 +62,7 @@ BEGIN
 END
 GO
 
-create procedure AddEarlySignupDiscount @ConferenceDayId int, @EndDate datetime, -- TODO why not date?
+create procedure AddEarlySignupDiscount @ConferenceDayId int, @EndDate datetime,
                                         @Discount decimal(4, 4)
 as
 begin
@@ -120,7 +120,7 @@ create procedure AddWorkshopReservation @workshop_id int, @reservation_date date
 as
 begin
     set nocount on;
-    insert into Workshop_reservations(workshop_id, reservation_date, due_price, nr_of_seats,)
+    insert into Workshop_reservations(workshop_id, reservation_date, due_price, nr_of_seats)
     values (@workshop_id, @reservation_date, @due_price, @nr_of_seats)
 end
 go
