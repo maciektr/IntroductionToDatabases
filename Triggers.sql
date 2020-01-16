@@ -41,19 +41,19 @@ END
 
 
 -- przy rzerwacji miejsc na warsztaty sprawdza czy jest odpowiednia ilość wolnych miejsc
--- CREATE TRIGGER ForbidToBookPlacesForFullConferenceDay
---     ON Workshop_reservations
---     AFTER INSERT, UPDATE AS
--- BEGIN
---     DECLARE @WorkshopID int = (SELECT workshop_id FROM inserted)
---     IF (dbo.GetNumberOfFreePlacesForConferenceDay(@ConferenceDayId) < 0)
---         BEGIN
---             DECLARE @FreePlaces int = dbo.GetNumberOfFreePlacesForConferenceDay(@ConferenceDayId) +
---                                       (SELECT places_reserved FROM inserted)
---             DECLARE @message varchar(100) = 'There are only ' + CAST(@FreePlaces as varchar(10)) +
---                                             ' places left for this conference day.';
---             THROW 52000,@message,1 ROLLBACK TRANSACTION
---         END
--- END
+CREATE TRIGGER CheckIfEnoughSeatsAvailable
+    ON Workshop_reservations
+    AFTER INSERT, UPDATE AS
+BEGIN
+    DECLARE @WorkshopID int = (SELECT workshop_id FROM inserted)
+    DECLARE @RequestedSeats int = (SELECT nr_of_seats FROM inserted)
+    DECLARE @FreeSeats int = (SELECT [dbo].[getWorkshopsFreeSeatsCount](@WorkshopID))
+    IF (@FreeSeats < @RequestedSeats)
+        BEGIN
+            DECLARE @Message varchar(100) = 'There are only ' + CAST(@FreeSeats as varchar(10)) +
+                                            ' places left for this conference day.';
+            THROW 52000,@Message,1 ROLLBACK TRANSACTION
+        END
+END
 
 
