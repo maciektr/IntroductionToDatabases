@@ -8,7 +8,7 @@ BEGIN
 END
 GO
 
-CREATE PROCEDURE AddConferenceDay @ConferenceId int,
+CREATE PROCEDURE AddConferenceDay @ConferenceId int, -- TODO nr of seats for conference?
                                   @Date date,
                                   @StandardPrice money,
                                   @StudentDiscount int
@@ -116,13 +116,12 @@ end
 go
 
 create procedure AddWorkshopReservation @workshop_id int, @reservation_date datetime, @due_price datetime,
-                                        @nr_of_seats int, @Conference_day_reservations_reservation_id int
+                                        @nr_of_seats int
 as
 begin
     set nocount on;
-    insert into Workshop_reservations(workshop_id, reservation_date, due_price, nr_of_seats,
-                                      Conference_day_reservations_reservation_id)
-    values (@workshop_id, @reservation_date, @due_price, @nr_of_seats, @Conference_day_reservations_reservation_id)
+    insert into Workshop_reservations(workshop_id, reservation_date, due_price, nr_of_seats,)
+    values (@workshop_id, @reservation_date, @due_price, @nr_of_seats)
 end
 go
 
