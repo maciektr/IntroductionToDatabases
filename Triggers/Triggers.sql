@@ -39,6 +39,37 @@ BEGIN
         END
 END
 
+-- sprawdzenie czy uczestnik zapisujący się na warsztaty nie jest już zapisany na inne warsztaty
+-- odbywające się w tym samym czasie
+CREATE TRIGGER CheckIfNotRegisteredForOtherWorkshop
+    ON Workshop_registration
+    AFTER INSERT, UPDATE AS
+BEGIN
+    DECLARE @ReservationId int = (SELECT reservation_id FROM inserted)
+    DECLARE @ParticipantID int = (SELECT participant_id FROM inserted)
+    DECLARE @StartTime datetime = (SELECT start_time
+                                   FROM Workshops
+                                            INNER JOIN Workshop_reservations Wr on Workshops.workshop_id = Wr.workshop_id
+                                   WHERE Wr.reservation_id = @ReservationId)
+    DECLARE @EndTime datetime = (SELECT end_time
+                                 FROM Workshops
+                                          INNER JOIN Workshop_reservations Wr on Workshops.workshop_id = Wr.workshop_id
+                                 WHERE Wr.reservation_id = @ReservationId)
+    DECLARE @CollidingWorkshops int = (SELECT Count(W.workshop_id)
+         FROM Workshop_reservations Wrs
+                INNER JOIN Workshop_registration Wrg on Wrs.reservation_id = Wrg.reservation_id AND Wrg.Participant_id=@ParticipantID
+                  INNER JOIN Workshops W on Wrs.workshop_id = W.workshop_id
+         WHERE
+               ((W.start_time BETWEEN @StartTime AND @EndTime)
+            OR (W.end_time BETWEEN @StartTime AND @EndTime)))
+    IF (@CollidingWorkshops
+        > 1) -- already registered for the day or0
+        BEGIN
+            DECLARE @message varchar(100) = 'Participant nr ' + CAST(@ParticipantID as varchar(3)) +
+                                            ' already registered for '+CAST(@CollidingWorkshops as varchar(3))+' workshops at this time';
+            THROW 52000,@message,1 ROLLBACK TRANSACTION
+        END
+END
 
 -- przy rzerwacji miejsc na warsztaty sprawdza czy jest odpowiednia ilość wolnych miejsc
 CREATE TRIGGER CheckIfEnoughSeatsAvailable
