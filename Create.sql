@@ -48,6 +48,7 @@ CREATE TABLE Conference_days (
     date date  NOT NULL DEFAULT GETDATE(),
     standard_price money  NOT NULL DEFAULT 0 CHECK (standard_price >= 0),
     student_discount decimal(4,4)  NOT NULL DEFAULT 0 CHECK (student_discount >= 0),
+    number_of_seats int  NOT NULL DEFAULT 0 CHECK (number_of_seats >= 0),
     CONSTRAINT Conference_days_pk PRIMARY KEY  (conference_day_id)
 );
 
@@ -101,6 +102,8 @@ CREATE TABLE Workshop_reservations (
     reservation_date datetime  NOT NULL DEFAULT GETDATE(),
     due_price datetime  NOT NULL DEFAULT DATEADD(week, 2, GETDATE()) CHECK (due_price >= GETDATE()),
     nr_of_seats int  NOT NULL DEFAULT 0 CHECK (nr_of_seats >= 0),
+    Conference_day_res_id int  NOT NULL,
+    active bit  NOT NULL DEFAULT 1,
     CONSTRAINT Workshop_reservations_pk PRIMARY KEY  (reservation_id)
 );
 
@@ -125,12 +128,14 @@ ALTER TABLE Companies ADD CONSTRAINT Companies_Clients
 -- Reference: Conference_day_registration_Conference_day_reservations (table: Conference_day_registration)
 ALTER TABLE Conference_day_registration ADD CONSTRAINT Conference_day_registration_Conference_day_reservations
     FOREIGN KEY (reservation_id)
-    REFERENCES Conference_day_reservations (reservation_id);
+    REFERENCES Conference_day_reservations (reservation_id)
+    ON DELETE  CASCADE;
 
 -- Reference: Conference_day_registration_Participants (table: Conference_day_registration)
 ALTER TABLE Conference_day_registration ADD CONSTRAINT Conference_day_registration_Participants
     FOREIGN KEY (Participant_id)
-    REFERENCES Participants (participant_id);
+    REFERENCES Participants (participant_id)
+    ON DELETE  CASCADE;
 
 -- Reference: Conference_day_reservations_Clients (table: Conference_day_reservations)
 ALTER TABLE Conference_day_reservations ADD CONSTRAINT Conference_day_reservations_Clients
@@ -140,22 +145,26 @@ ALTER TABLE Conference_day_reservations ADD CONSTRAINT Conference_day_reservatio
 -- Reference: Conference_day_reservations_Conference_days (table: Conference_day_reservations)
 ALTER TABLE Conference_day_reservations ADD CONSTRAINT Conference_day_reservations_Conference_days
     FOREIGN KEY (conference_day_id)
-    REFERENCES Conference_days (conference_day_id);
+    REFERENCES Conference_days (conference_day_id)
+    ON DELETE  CASCADE;
 
 -- Reference: Conference_days_Conferences (table: Conference_days)
 ALTER TABLE Conference_days ADD CONSTRAINT Conference_days_Conferences
     FOREIGN KEY (conference_id)
-    REFERENCES Conferences (Conference_id);
+    REFERENCES Conferences (Conference_id)
+    ON DELETE  CASCADE;
 
 -- Reference: Discounts_Conference_days (table: Early_signup_discounts)
 ALTER TABLE Early_signup_discounts ADD CONSTRAINT Discounts_Conference_days
     FOREIGN KEY (conference_day_id)
-    REFERENCES Conference_days (conference_day_id);
+    REFERENCES Conference_days (conference_day_id)
+    ON DELETE  CASCADE;
 
 -- Reference: Participants_Clients (table: Participants)
 ALTER TABLE Participants ADD CONSTRAINT Participants_Clients
     FOREIGN KEY (clients_id)
-    REFERENCES Clients (id);
+    REFERENCES Clients (id)
+    ON DELETE  SET NULL;
 
 -- Reference: Payments_Conference_day_reservations (table: Payments)
 ALTER TABLE Payments ADD CONSTRAINT Payments_Conference_day_reservations
@@ -165,17 +174,26 @@ ALTER TABLE Payments ADD CONSTRAINT Payments_Conference_day_reservations
 -- Reference: Workshop_registration_Participants (table: Workshop_registration)
 ALTER TABLE Workshop_registration ADD CONSTRAINT Workshop_registration_Participants
     FOREIGN KEY (Participant_id)
-    REFERENCES Participants (participant_id);
+    REFERENCES Participants (participant_id)
+    ON DELETE  CASCADE;
 
 -- Reference: Workshop_registration_Workshop_reservations (table: Workshop_registration)
 ALTER TABLE Workshop_registration ADD CONSTRAINT Workshop_registration_Workshop_reservations
     FOREIGN KEY (reservation_id)
-    REFERENCES Workshop_reservations (reservation_id);
+    REFERENCES Workshop_reservations (reservation_id)
+    ON DELETE  CASCADE;
+
+-- Reference: Workshop_reservations_Conference_day_reservations (table: Workshop_reservations)
+ALTER TABLE Workshop_reservations ADD CONSTRAINT Workshop_reservations_Conference_day_reservations
+    FOREIGN KEY (Conference_day_res_id)
+    REFERENCES Conference_day_reservations (reservation_id)
+    ON DELETE  CASCADE;
 
 -- Reference: Workshop_reservations_Workshops (table: Workshop_reservations)
 ALTER TABLE Workshop_reservations ADD CONSTRAINT Workshop_reservations_Workshops
     FOREIGN KEY (workshop_id)
-    REFERENCES Workshops (workshop_id);
+    REFERENCES Workshops (workshop_id)
+    ON DELETE  CASCADE;
 
 -- Reference: Workshops_Conference_days (table: Workshops)
 ALTER TABLE Workshops ADD CONSTRAINT Workshops_Conference_days

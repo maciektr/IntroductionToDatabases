@@ -14,7 +14,7 @@
         </Counter>
         <Counter>
             <Name>column</Name>
-            <Value>87</Value>
+            <Value>91</Value>
             <Prefix>c</Prefix>
         </Counter>
         <Counter>
@@ -24,7 +24,7 @@
         </Counter>
         <Counter>
             <Name>reference</Name>
-            <Value>25</Value>
+            <Value>26</Value>
             <Prefix>r</Prefix>
         </Counter>
         <Counter>
@@ -79,7 +79,7 @@
         </Counter>
         <Counter>
             <Name>referenceDisplay</Name>
-            <Value>25</Value>
+            <Value>26</Value>
             <Prefix>rd</Prefix>
         </Counter>
     </Counters>
@@ -140,6 +140,15 @@
                     <Nullable>false</Nullable>
                     <DefaultValue>0</DefaultValue>
                     <CheckExpression>student_discount &gt;= 0</CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c91">
+                    <Name>number_of_seats</Name>
+                    <Type>int</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue>0</DefaultValue>
+                    <CheckExpression>number_of_seats &gt;= 0</CheckExpression>
                     <Properties/>
                 </Column>
             </Columns>
@@ -614,6 +623,24 @@
                     <CheckExpression>nr_of_seats &gt;= 0</CheckExpression>
                     <Properties/>
                 </Column>
+                <Column Id="c88">
+                    <Name>Conference_day_res_id</Name>
+                    <Type>int</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue></DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
+                <Column Id="c89">
+                    <Name>active</Name>
+                    <Type>bit</Type>
+                    <Description></Description>
+                    <Nullable>false</Nullable>
+                    <DefaultValue>1</DefaultValue>
+                    <CheckExpression></CheckExpression>
+                    <Properties/>
+                </Column>
             </Columns>
             <PrimaryKey>
                 <Name></Name>
@@ -900,7 +927,7 @@
             <Cardinality>1..*</Cardinality>
             <Mandatory>true</Mandatory>
             <OnUpdateAction>None</OnUpdateAction>
-            <OnDeleteAction>None</OnDeleteAction>
+            <OnDeleteAction>Cascade</OnDeleteAction>
             <Properties/>
         </Reference>
         <Reference Id="r4">
@@ -938,7 +965,7 @@
             <Cardinality>0..*</Cardinality>
             <Mandatory>true</Mandatory>
             <OnUpdateAction>None</OnUpdateAction>
-            <OnDeleteAction>None</OnDeleteAction>
+            <OnDeleteAction>Cascade</OnDeleteAction>
             <Properties/>
         </Reference>
         <Reference Id="r6">
@@ -976,7 +1003,7 @@
             <Cardinality>0..*</Cardinality>
             <Mandatory>true</Mandatory>
             <OnUpdateAction>None</OnUpdateAction>
-            <OnDeleteAction>None</OnDeleteAction>
+            <OnDeleteAction>Cascade</OnDeleteAction>
             <Properties/>
         </Reference>
         <Reference Id="r11">
@@ -995,7 +1022,7 @@
             <Cardinality>1..*</Cardinality>
             <Mandatory>true</Mandatory>
             <OnUpdateAction>None</OnUpdateAction>
-            <OnDeleteAction>None</OnDeleteAction>
+            <OnDeleteAction>Cascade</OnDeleteAction>
             <Properties/>
         </Reference>
         <Reference Id="r15">
@@ -1014,7 +1041,7 @@
             <Cardinality>0..*</Cardinality>
             <Mandatory>true</Mandatory>
             <OnUpdateAction>None</OnUpdateAction>
-            <OnDeleteAction>None</OnDeleteAction>
+            <OnDeleteAction>Cascade</OnDeleteAction>
             <Properties/>
         </Reference>
         <Reference Id="r18">
@@ -1033,7 +1060,7 @@
             <Cardinality>0..*</Cardinality>
             <Mandatory>true</Mandatory>
             <OnUpdateAction>None</OnUpdateAction>
-            <OnDeleteAction>None</OnDeleteAction>
+            <OnDeleteAction>Cascade</OnDeleteAction>
             <Properties/>
         </Reference>
         <Reference Id="r19">
@@ -1052,7 +1079,7 @@
             <Cardinality>0..*</Cardinality>
             <Mandatory>true</Mandatory>
             <OnUpdateAction>None</OnUpdateAction>
-            <OnDeleteAction>None</OnDeleteAction>
+            <OnDeleteAction>Cascade</OnDeleteAction>
             <Properties/>
         </Reference>
         <Reference Id="r20">
@@ -1071,7 +1098,7 @@
             <Cardinality>0..*</Cardinality>
             <Mandatory>true</Mandatory>
             <OnUpdateAction>None</OnUpdateAction>
-            <OnDeleteAction>None</OnDeleteAction>
+            <OnDeleteAction>Cascade</OnDeleteAction>
             <Properties/>
         </Reference>
         <Reference Id="r24">
@@ -1109,7 +1136,26 @@
             <Cardinality>0..1</Cardinality>
             <Mandatory>false</Mandatory>
             <OnUpdateAction>None</OnUpdateAction>
-            <OnDeleteAction>None</OnDeleteAction>
+            <OnDeleteAction>SetNull</OnDeleteAction>
+            <Properties/>
+        </Reference>
+        <Reference Id="r26">
+            <Name>Workshop_reservations_Conference_day_reservations</Name>
+            <Description></Description>
+            <PKTable>t2</PKTable>
+            <FKTable>t8</FKTable>
+            <PKRole></PKRole>
+            <FKRole></FKRole>
+            <ReferenceColumns>
+                <ReferenceColumn>
+                    <PKColumn>c32</PKColumn>
+                    <FKColumn>c88</FKColumn>
+                </ReferenceColumn>
+            </ReferenceColumns>
+            <Cardinality>0..*</Cardinality>
+            <Mandatory>true</Mandatory>
+            <OnUpdateAction>None</OnUpdateAction>
+            <OnDeleteAction>Cascade</OnDeleteAction>
             <Properties/>
         </Reference>
     </References>
@@ -1120,9 +1166,9 @@
     <TableDisplays>
         <TableDisplay Id="td1">
             <X>6441.5</X>
-            <Y>6723.5</Y>
+            <Y>6724.5</Y>
             <Width>222.0</Width>
-            <Height>102.0</Height>
+            <Height>116.0</Height>
             <LineColor>#000000</LineColor>
             <FillColor>#ffffff</FillColor>
             <Table>t1</Table>
@@ -1152,14 +1198,14 @@
             <X>6459.5</X>
             <Y>6440.5</Y>
             <Width>187.0</Width>
-            <Height>60.0</Height>
+            <Height>73.0</Height>
             <LineColor>#000000</LineColor>
             <FillColor>#ffffff</FillColor>
             <Table>t4</Table>
             <FixedSize>false</FixedSize>
         </TableDisplay>
         <TableDisplay Id="td5">
-            <X>6778.5</X>
+            <X>6777.5</X>
             <Y>6670.5</Y>
             <Width>161.0</Width>
             <Height>87.0</Height>
@@ -1179,8 +1225,8 @@
             <FixedSize>false</FixedSize>
         </TableDisplay>
         <TableDisplay Id="td7">
-            <X>6365.5</X>
-            <Y>6923.5</Y>
+            <X>6351.5</X>
+            <Y>6925.5</Y>
             <Width>264.0</Width>
             <Height>130.0</Height>
             <LineColor>#000000</LineColor>
@@ -1189,18 +1235,18 @@
             <FixedSize>false</FixedSize>
         </TableDisplay>
         <TableDisplay Id="td8">
-            <X>6700.5</X>
-            <Y>6938.5</Y>
-            <Width>291.0</Width>
-            <Height>100.0</Height>
+            <X>6677.5</X>
+            <Y>6936.5</Y>
+            <Width>329.0</Width>
+            <Height>130.0</Height>
             <LineColor>#000000</LineColor>
             <FillColor>#ffffff</FillColor>
             <Table>t8</Table>
             <FixedSize>false</FixedSize>
         </TableDisplay>
         <TableDisplay Id="td9">
-            <X>7048.5</X>
-            <Y>6935.5</Y>
+            <X>7059.5</X>
+            <Y>6937.5</Y>
             <Width>268.0</Width>
             <Height>60.0</Height>
             <LineColor>#000000</LineColor>
@@ -1246,7 +1292,7 @@
             <Type>Cross_3CP</Type>
             <ControlPoints>
                 <ControlPoint>
-                    <X>6853.5</X>
+                    <X>6852.5</X>
                     <Y>6709.5</Y>
                 </ControlPoint>
                 <ControlPoint>
@@ -1280,7 +1326,7 @@
                 </ControlPoint>
                 <ControlPoint>
                     <X>6567.5</X>
-                    <Y>6755.5</Y>
+                    <Y>6756.5</Y>
                 </ControlPoint>
             </ControlPoints>
             <PkTableDisplay>td4</PkTableDisplay>
@@ -1293,11 +1339,11 @@
             <ControlPoints>
                 <ControlPoint>
                     <X>6553.5</X>
-                    <Y>6763.5</Y>
+                    <Y>6764.5</Y>
                 </ControlPoint>
                 <ControlPoint>
                     <X>6553.5</X>
-                    <Y>6953.5</Y>
+                    <Y>6955.5</Y>
                 </ControlPoint>
             </ControlPoints>
             <PkTableDisplay>td1</PkTableDisplay>
@@ -1310,11 +1356,11 @@
             <ControlPoints>
                 <ControlPoint>
                     <X>6519.5</X>
-                    <Y>6733.5</Y>
+                    <Y>6734.5</Y>
                 </ControlPoint>
                 <ControlPoint>
                     <X>6479.5</X>
-                    <Y>6733.5</Y>
+                    <Y>6734.5</Y>
                 </ControlPoint>
                 <ControlPoint>
                     <X>6479.5</X>
@@ -1369,7 +1415,7 @@
             <ControlPoints>
                 <ControlPoint>
                     <X>6617.5</X>
-                    <Y>6786.5</Y>
+                    <Y>6787.5</Y>
                 </ControlPoint>
                 <ControlPoint>
                     <X>6617.5</X>
@@ -1389,20 +1435,20 @@
             <Type>Vertical_4CP</Type>
             <ControlPoints>
                 <ControlPoint>
-                    <X>7076.5</X>
+                    <X>7087.5</X>
                     <Y>6757.5</Y>
                 </ControlPoint>
                 <ControlPoint>
-                    <X>7076.5</X>
+                    <X>7087.5</X>
                     <Y>6898.5</Y>
                 </ControlPoint>
                 <ControlPoint>
-                    <X>7076.5</X>
+                    <X>7087.5</X>
                     <Y>6898.5</Y>
                 </ControlPoint>
                 <ControlPoint>
-                    <X>7076.5</X>
-                    <Y>6969.5</Y>
+                    <X>7087.5</X>
+                    <Y>6971.5</Y>
                 </ControlPoint>
             </ControlPoints>
             <PkTableDisplay>td6</PkTableDisplay>
@@ -1414,11 +1460,11 @@
             <Type>Horizontal_2CP</Type>
             <ControlPoints>
                 <ControlPoint>
-                    <X>6805.5</X>
+                    <X>6782.5</X>
                     <Y>6948.5</Y>
                 </ControlPoint>
                 <ControlPoint>
-                    <X>7098.5</X>
+                    <X>7109.5</X>
                     <Y>6948.5</Y>
                 </ControlPoint>
             </ControlPoints>
@@ -1431,11 +1477,11 @@
             <Type>Horizontal_2CP</Type>
             <ControlPoints>
                 <ControlPoint>
-                    <X>6619.5</X>
+                    <X>6605.5</X>
                     <Y>6965.5</Y>
                 </ControlPoint>
                 <ControlPoint>
-                    <X>6726.5</X>
+                    <X>6703.5</X>
                     <Y>6965.5</Y>
                 </ControlPoint>
             </ControlPoints>
@@ -1486,7 +1532,7 @@
             <Type>Horizontal_4CP</Type>
             <ControlPoints>
                 <ControlPoint>
-                    <X>6880.5</X>
+                    <X>6879.5</X>
                     <Y>6706.5</Y>
                 </ControlPoint>
                 <ControlPoint>
@@ -1505,6 +1551,23 @@
             <PkTableDisplay>td5</PkTableDisplay>
             <FkTableDisplay>td6</FkTableDisplay>
             <Reference>r2</Reference>
+        </ReferenceDisplay>
+        <ReferenceDisplay Id="rd26">
+            <Color>#000000</Color>
+            <Type>Vertical_2CP</Type>
+            <ControlPoints>
+                <ControlPoint>
+                    <X>6729.5</X>
+                    <Y>6566.5</Y>
+                </ControlPoint>
+                <ControlPoint>
+                    <X>6729.5</X>
+                    <Y>7005.5</Y>
+                </ControlPoint>
+            </ControlPoints>
+            <PkTableDisplay>td2</PkTableDisplay>
+            <FkTableDisplay>td8</FkTableDisplay>
+            <Reference>r26</Reference>
         </ReferenceDisplay>
     </ReferenceDisplays>
     <Properties>
