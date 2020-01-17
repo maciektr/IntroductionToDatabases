@@ -1,3 +1,0 @@
-DROP FUNCTION calcExpectedPriceForConferenceDay;
-DROP FUNCTION conferenceReservationPrice;
-DROP FUNCTION getWorkshopsFreeSeatsCount;
