@@ -1,8 +1,5 @@
-CREATE FUNCTION getWorkshopsFreeSeatsCount
-(
-    @workshopId INT
-)
-RETURNS INT
+CREATE FUNCTION workshopFreeSeats(@workshopId int)
+    RETURNS INT
 AS
 BEGIN
     DECLARE @used INT
@@ -15,3 +12,4 @@ BEGIN
                 WHERE workshop_id = @workshopId)
     RETURN @all - @used
 END
+go
