@@ -56,6 +56,7 @@ CREATE TABLE Conference_days (
 CREATE TABLE Conferences (
     Conference_id int  NOT NULL IDENTITY,
     name varchar(100)  NOT NULL,
+    description text  NULL,
     CONSTRAINT Conferences_pk PRIMARY KEY  (Conference_id)
 );
 
