@@ -1,3 +1,6 @@
+-- ===================================
+-- Triggery dla tabeli Conference_days
+-- ===================================
 -- sprawdzenie czy na daną konferencje nie zostały dodane dwa te same dni konferencji
 CREATE TRIGGER CheckForTwoTheSameConferenceDays
     ON Conference_days
@@ -16,6 +19,9 @@ BEGIN
         END
 END
 
+-- ===================================
+-- Triggery dla tabeli Workshop_registration
+-- ===================================
 -- sprawdzenie czy uczestnik zapisujący się na warsztaty jest już zapisany na odpowiedni dzień konferencji
 CREATE TRIGGER CheckIfRegisteredForTheDay
     ON Workshop_registration
@@ -71,8 +77,11 @@ BEGIN
         END
 END
 
+-- ===================================
+-- Triggery dla tabeli Workshop_reservations
+-- ===================================
 -- przy rzerwacji miejsc na warsztaty sprawdza czy jest odpowiednia ilość wolnych miejsc
-CREATE TRIGGER CheckIfEnoughSeatsAvailable
+CREATE TRIGGER CheckIfEnoughSeatsAvailableForWorkshop
     ON Workshop_reservations
     AFTER INSERT, UPDATE AS
 BEGIN
@@ -87,5 +96,25 @@ BEGIN
         END
 END
 
+-- ===================================
+-- Triggery dla tabeli Conference_day_reservations
+-- ===================================
+-- przy rzerwacji miejsc na warsztaty sprawdza czy jest odpowiednia ilość wolnych miejsc
+CREATE TRIGGER CheckIfEnoughSeatsAvailableForConference
+    ON Conference_day_reservations
+    AFTER INSERT, UPDATE AS
+BEGIN
+    DECLARE @WorkshopID int = (SELECT workshop_id FROM inserted)
+    DECLARE @RequestedSeats int = (SELECT nr_of_seats FROM inserted)
+    DECLARE @FreeSeats int = (SELECT [dbo].[getWorkshopsFreeSeatsCount](@WorkshopID))
+    IF (@FreeSeats < @RequestedSeats)
+        BEGIN
+            DECLARE @Message varchar(100) = 'There are only ' + CAST(@FreeSeats as varchar(10)) +
+                                            ' places left for this conference day.';
+            THROW 52000,@Message,1 ROLLBACK TRANSACTION
+        END
+END
 
+
+--
 

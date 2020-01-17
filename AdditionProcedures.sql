@@ -102,7 +102,6 @@ begin
 end
 go
 
--- TODO where to define default values?
 create procedure AddConferenceDayReservation @conference_day_id int, @clients_id int, @reservation_date datetime,
                                              @active bit, @due_price datetime,
                                              @adult_seats int, @student_seats int
