@@ -85,6 +85,25 @@ BEGIN
         END
 END
 
+-- procedura usuwająca uczestników warsztatów zapisanych na dezaktywowaną rezerwację
+-- TODO isActive neccessary? -> forces manual CASCADE
+CREATE TRIGGER OnDeactivateWReservation
+    ON Workshop_reservations
+    AFTER UPDATE AS
+BEGIN
+    DECLARE @active bit = (SELECT active FROM inserted)
+    DECLARE @ReservationID int = (SELECT reservation_id FROM inserted)
+    IF (@active = 0)
+        BEGIN TRY
+        BEGIN TRAN DELETE
+                   FROM Workshop_registration
+                   WHERE reservation_id = @ReservationId
+        COMMIT TRAN
+    END TRY
+    BEGIN CATCH
+        PRINT error_message() ROLLBACK TRANSACTION
+    END CATCH
+END
 -- ===================================
 -- Triggery dla tabeli Workshop_registration
 -- ===================================
