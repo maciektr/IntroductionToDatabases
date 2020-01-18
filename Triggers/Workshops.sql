@@ -1,6 +1,7 @@
 -- ===================================
 -- Triggery dla tabeli Workshops
 -- ===================================
+-- sprawdzenie czy godzina rozpoczęcia warsztatów jest wcześniejsza niż godzina jego zakończenia
 CREATE TRIGGER StartHourLtEndHour
     ON Workshops
     AFTER INSERT, UPDATE AS
@@ -14,6 +15,7 @@ BEGIN
         END
 END
 
+-- sprawdzenie czy tworzone warsztaty nie mają większej ilości miejsc niż to ogranicza odpowiadający dzień konferencji
 CREATE TRIGGER WorkshopPlacesLtConfPlaces
     ON Workshops
     AFTER INSERT, UPDATE AS
@@ -31,7 +33,7 @@ END
 -- ===================================
 -- Triggery dla tabeli Workshop_reservations
 -- ===================================
--- przy rzerwacji miejsc na warsztaty sprawdza czy jest odpowiednia ilość wolnych miejsc
+-- przy rzerwacji miejsc na warsztaty sprawdza czy jest odpowiednia ilość wolnych miejsc na warsztatach
 CREATE TRIGGER CheckIfEnoughSeatsAvailableForWorkshop
     ON Workshop_reservations
     AFTER INSERT, UPDATE AS
@@ -66,6 +68,19 @@ BEGIN
     IF (@ConfDayDate <> @WorkshopDate)
         BEGIN
             DECLARE @Message varchar(100) = 'workshop date differs from the associated conference day date';
+            THROW 52000,@Message,1 ROLLBACK TRANSACTION
+        END
+END
+
+-- sprawdzenie czy odpowiadająca rezerwacji warsztatu rezerwacja dnia konferencji jest aktywna
+CREATE TRIGGER CheckIfCorrespConfReservationActive
+    ON Workshop_reservations
+    AFTER INSERT, UPDATE AS
+BEGIN
+    DECLARE @ConfResID date = (SELECT Conference_day_res_id FROM inserted)
+    IF ((SELECT active FROM Conference_day_reservations cdr WHERE cdr.reservation_id = @ConfResID) = 0)
+        BEGIN
+            DECLARE @Message varchar(100) = 'Corresponding conference day reservation is not active';
             THROW 52000,@Message,1 ROLLBACK TRANSACTION
         END
 END
@@ -146,6 +161,20 @@ BEGIN
             DECLARE @message varchar(100) = 'nr of participants for this reservation is exceeded, ' +
                                             CAST(@PartForReserv as varchar(3)) +
                                             ' participants are already registered';
+            THROW 52000,@message,1 ROLLBACK TRANSACTION
+        END
+END
+
+-- sprawdzenie czy uczestnik zapisuje się na aktywną rezerwację
+CREATE TRIGGER CheckIfWReservationActive
+    ON Workshop_registration
+    AFTER INSERT, UPDATE AS
+BEGIN
+    DECLARE @ReservationId int = (SELECT reservation_id FROM inserted)
+    IF ((SELECT active FROM Workshop_reservations WHERE reservation_id = @ReservationId)
+        = 0)
+        BEGIN
+            DECLARE @message varchar(100) = 'corresponding reservation is not active';
             THROW 52000,@message,1 ROLLBACK TRANSACTION
         END
 END

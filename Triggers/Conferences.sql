@@ -48,15 +48,32 @@ CREATE TRIGGER CheckIfConfReservationNotFull
 BEGIN
     DECLARE @reservationId int = (SELECT reservation_id FROM inserted)
     DECLARE @isStudent bit = (SELECT is_student FROM inserted)
-    DECLARE @seatsTaken int = (SELECT COUNT(participant_id) FROM Conference_day_registration
-            WHERE reservation_id = @reservationId AND is_student = @isStudent)
-    DECLARE @seatsFree int = (SELECT IIF(@isStudent=1, student_seats, adult_seats) FROM Conference_day_reservations
-            WHERE reservation_id = @reservationId)
+    DECLARE @seatsTaken int = (SELECT COUNT(participant_id)
+                               FROM Conference_day_registration
+                               WHERE reservation_id = @reservationId
+                                 AND is_student = @isStudent)
+    DECLARE @seatsFree int = (SELECT IIF(@isStudent = 1, student_seats, adult_seats)
+                              FROM Conference_day_reservations
+                              WHERE reservation_id = @reservationId)
     IF (@seatsTaken > @seatsFree)
         BEGIN
             DECLARE @message varchar(100) = 'nr of participants for this reservation is exceeded, ' +
                                             CAST(@seatsTaken as varchar(3)) +
                                             ' participants are already registered';
+            THROW 52000,@message,1 ROLLBACK TRANSACTION
+        END
+END
+
+-- sprawdzenie czy uczestnik zapisuje się na aktywną rezerwację
+CREATE TRIGGER CheckIfCReservationActive
+    ON Conference_day_registration
+    AFTER INSERT, UPDATE AS
+BEGIN
+    DECLARE @ReservationId int = (SELECT reservation_id FROM inserted)
+    IF ((SELECT active FROM Conference_day_reservations WHERE reservation_id = @ReservationId)
+        = 0)
+        BEGIN
+            DECLARE @message varchar(100) = 'corresponding reservation is not active';
             THROW 52000,@message,1 ROLLBACK TRANSACTION
         END
 END
