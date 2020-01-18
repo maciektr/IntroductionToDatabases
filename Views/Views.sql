@@ -34,3 +34,9 @@ CREATE VIEW ParticipantsForConferenceDay
 AS SELECT name, surname, conference_day_id FROM Participants
 INNER JOIN Conference_day_registration Cdrg on Participants.participant_id = Cdrg.Participant_id
 INNER JOIN Conference_day_reservations Cdr on Cdrg.reservation_id = Cdr.reservation_id
+
+--widok prezentujący uczestników na różne warsztaty
+CREATE VIEW ParticipantsForWorkshop
+AS SELECT name, surname, workshop_id FROM Participants
+INNER JOIN Workshop_registration Wrg on Participants.participant_id = Wrg.Participant_id
+INNER JOIN Workshop_reservations Wrs on Wrg.reservation_id = Wrs.reservation_id
