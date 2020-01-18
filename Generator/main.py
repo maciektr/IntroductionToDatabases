@@ -5,6 +5,7 @@ from ConfDaysGenerator import *
 from EsdGenerator import *
 from ConferenceGenerator import *
 from WorkshopGenerator import *
+from WorkshopResGen import *
 from random import Random
 from faker import Faker
 
@@ -14,7 +15,6 @@ rand = Random()
 generators = []
 
 part_gen = ParticipantsGenerator()
-generators.append(part_gen)
 part_gen.make(None, 10)
 
 clients_gen = ClientsGenerator(part_gen)
@@ -40,6 +40,10 @@ day_res_gen.make(day_gen.days)
 wor_gen = WorkshopGenerator(rand, faker)
 generators.append(wor_gen)
 wor_gen.make(day_gen.days)
+
+wor_res_gen = WorkshopResGen(day_res_gen)
+generators.append(wor_res_gen)
+wor_res_gen.make(wor_gen.workshops)
 
 for g in generators:
     print(g.to_sql())

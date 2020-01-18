@@ -17,6 +17,7 @@ class Workshop:
             self.start, self.end = self.end, self.start
         self.topic = self.faker.bs()
         self.numb_seats = self.rand.randint(10, day.numb_of_seats)
+        self.free_seats = self.numb_seats
 
     def random_time(self, date):
         return datetime.combine(date, time(self.rand.randint(0, 23), self.rand.randint(0, 59)))

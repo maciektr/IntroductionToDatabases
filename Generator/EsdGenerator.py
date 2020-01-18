@@ -15,7 +15,7 @@ class EsdGenerator:
         for v in self.esds:
             res += v.to_sql()
             res += '\n'
-        res = res[:-2]
+        res = res[:-1]
         self.esds = []
         return res
 

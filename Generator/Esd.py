@@ -9,4 +9,4 @@ class Esd:
 
     def to_sql(self):
         return "INSERT INTO Early_signup_discounts (conference_day_id, end_date, discount) VALUES (" + str(
-            self.day_id) + ",\'" + str(self.date) + "\',\'" + str(self.discount) + "\')"
+            self.day_id) + ",\'" + str(self.date) + "\'," + str(self.discount) + ")"

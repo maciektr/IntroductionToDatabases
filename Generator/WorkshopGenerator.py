@@ -25,3 +25,4 @@ class WorkshopGenerator:
         for day in days:
             for _ in range(self.rand.randint(2, self.max_nr_workshops)):
                 self.workshops.append(Workshop(self.next_workshop_id, day, self.faker, self.rand))
+                self.next_workshop_id += 1
