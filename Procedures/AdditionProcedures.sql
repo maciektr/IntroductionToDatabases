@@ -8,7 +8,7 @@ BEGIN
 END
 GO
 
-CREATE PROCEDURE AddConferenceDay @ConferenceId int, -- TODO nr of seats for conference?
+CREATE PROCEDURE AddConferenceDay @ConferenceId int,
                                   @Date date,
                                   @StandardPrice money,
                                   @StudentDiscount int
@@ -22,34 +22,52 @@ END
 GO
 
 -- Add client (legal person) to database
-CREATE PROCEDURE AddClient @ZipCode varchar(6), @City varchar(30), @Address varchar(100)
+CREATE PROCEDURE AddClientParticipant @ZipCode varchar(6), @City varchar(30), @Address varchar(100), @Name varchar(100),
+                                      @Surname varchar(100),
+                                      @Email varchar(100), @Phone varchar(20)
 AS
 BEGIN
     SET NOCOUNT ON;
     INSERT INTO Clients(zip_code, city, address)
     VALUES (@ZipCode, @City, @Address)
+
+    INSERT INTO Participants (clients_id, name, surname, email, phone)
+    VALUES (SCOPE_IDENTITY(), @Name, @Surname, @Email, @Phone)
+END
+GO
+
+CREATE PROCEDURE AddClientCompany @ZipCode varchar(6), @City varchar(30), @Address varchar(100),
+                                  @companyName varchar(100), @nip nvarchar(15), @phone varchar(20), @email varchar(100)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    INSERT INTO Clients(zip_code, city, address)
+    VALUES (@ZipCode, @City, @Address)
+
+    INSERT INTO Companies (companyName, nip, phone, clients_id, email)
+    VALUES (@companyName, @nip, @phone, scope_identity(), @email)
 END
 GO
 
 -- Add company (each has its unique clients_id)
-CREATE PROCEDURE AddCompany @companyName varchar(100), @nip nvarchar(15), @phone varchar(20),
-                            @clients_id int, @email varchar(100)
-AS
-BEGIN
-    SET NOCOUNT ON;
-    INSERT INTO Companies(companyName, nip, phone, clients_id, email)
-    VALUES (@companyName, @nip, @phone, @clients_id, @email)
-END
-GO
+-- CREATE PROCEDURE AddCompany @companyName varchar(100), @nip nvarchar(15), @phone varchar(20),
+--                             @clients_id int, @email varchar(100)
+-- AS
+-- BEGIN
+--     SET NOCOUNT ON;
+--     INSERT INTO Companies(companyName, nip, phone, clients_id, email)
+--     VALUES (@companyName, @nip, @phone, @clients_id, @email)
+-- END
+-- GO
+
 -- Add participant (natural person)
 CREATE PROCEDURE AddParticipant @Name varchar(100), @Surname varchar(100),
-                                @Email varchar(100), @Phone varchar(20),
-                                @ClientId int = null -- TODO who pays for participant without client?
+                                @Email varchar(100), @Phone varchar(20)
 AS
 BEGIN
     SET NOCOUNT ON;
-    INSERT INTO Participants(clients_id, name, surname, email, phone)
-    VALUES (@ClientId, @Name, @Surname, @Email, @Phone)
+    INSERT INTO Participants(name, surname, email, phone)
+    VALUES (@Name, @Surname, @Email, @Phone)
 END
 GO
 
