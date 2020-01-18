@@ -1,20 +1,36 @@
 CREATE VIEW PaymentsForReservation
 	AS
-	SELECT reservation_id, sum(value)
+	SELECT reservation_id, sum(Payments.value) as already_paid
 	FROM Payments
 	GROUP BY reservation_id
 GO
 
--- CREATE VIEW UnpaidDayReservations
--- 	AS
--- 	SELECT Conferences.name as Nazwa_Konferencji, Dni_Konferencji.Data,
--- 	Klienci.Nazwa as Nazwa_Klienta, Kwota_Do_Zaplaty, Kwota_Zaplacona,
--- 	Kwota_Do_Zaplaty - Kwota_Zaplacona as Roznica, Dni_Konferencji_Rezerwacje.Liczba_Miejsc,
--- 	Klienci.Nr_Telefonu, Klienci.Email
--- 	FROM Conference_day_reservations
--- 	join Conference_days Cd on Conference_day_reservations.conference_day_id = Cd.conference_day_id
--- 	join Conferences C on Cd.conference_id = C.Conference_id
--- 	join Clients C2 on Conference_day_reservations.clients_id = C2.id
--- 	WHERE due_price < paid_price
--- 	AND Cd.date > GETDATE()
--- GO
+-- wyświetla balans każdego klienta
+CREATE VIEW ClientsBalanceView
+AS SELECT id as client_id, dbo.clientsBalance(id) as balance FROM Clients
+
+
+-- widok wszystkich klientów którzy nie opłacili rezerwacji
+CREATE VIEW ClientsWithUnpaidReservations
+AS SELECT clients_id, reservation_id, due_price as to_pay_until,
+          dbo.confReservationPrice(reservation_id) -dbo.confReservationPaidAmount(reservation_id) as left_to_pay
+FROM Conference_day_reservations
+
+-- widok klientów którzy nie opłacili rezerwacji w wyznaczonym terminie
+CREATE VIEW ClientsToCall
+AS SELECT clients_id, reservation_id, due_price as to_pay_until,
+          dbo.confReservationPrice(reservation_id) -dbo.confReservationPaidAmount(reservation_id) as left_to_pay
+FROM Conference_day_reservations
+WHERE due_price < GETDATE()
+
+-- warsztaty na które są jeszcze wolne miejsca
+-- CREATE VIEW AvailableWorkshops
+
+-- widok prezentujący klientów którzy najczęściej korzystają z usług i którzy najwięcej płacą.
+-- CREATE VIEW MostActiveClients
+
+--widok prezentujący uczestników na różne dni konferencji
+CREATE VIEW ParticipantsForConferenceDay
+AS SELECT name, surname, conference_day_id FROM Participants
+INNER JOIN Conference_day_registration Cdrg on Participants.participant_id = Cdrg.Participant_id
+INNER JOIN Conference_day_reservations Cdr on Cdrg.reservation_id = Cdr.reservation_id
