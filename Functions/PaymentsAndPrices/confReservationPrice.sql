@@ -2,7 +2,7 @@ CREATE FUNCTION confReservationPrice(@reservation_id int)
     RETURNS MONEY
 AS
 BEGIN
-    DECLARE @dayPrice money = dbo.calcExpectedPriceForConferenceDay(@reservation_id)
+    DECLARE @dayPrice money = dbo.confDayPrice(@reservation_id)
     DECLARE @workshopsPrice money = (select sum(wr.nr_of_seats * W.price)
                                      from Conference_day_reservations res
                                               inner join Conference_days Cd on res.conference_day_id = Cd.conference_day_id
