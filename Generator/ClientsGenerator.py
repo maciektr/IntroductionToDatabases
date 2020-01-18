@@ -15,6 +15,12 @@ class ClientsGenerator:
         self.clients = []
         self.companies = []
 
+    def choice(self):
+        return self.rand.choice(self.clients)
+
+    def clients_count(self):
+        return len(self.clients)
+
     def make(self, n=1):
         for _ in range(n):
             cl = Client(self.next_client_id, self.faker)

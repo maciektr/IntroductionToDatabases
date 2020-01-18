@@ -1,6 +1,6 @@
 class Client:
-    def __init__(self, id, faker):
-        self.id = id
+    def __init__(self, cl_id, faker):
+        self.cl_id = cl_id
         self.faker = faker
 
         add = self.faker.address().split('\n')
@@ -10,4 +10,4 @@ class Client:
 
     def to_sql(self):
         return "INSERT INTO CLIENTS (id,zip_code, city, address) " \
-               "VALUES (" + str(self.id) + ",\'" + self.zip_code + "\',\'" + self.city + "\',\'" + self.address + "\')"
+               "VALUES (" + str(self.cl_id) + ",\'" + self.zip_code + "\',\'" + self.city + "\',\'" + self.address + "\')"
