@@ -15,11 +15,6 @@ class WorkshopResGen:
 
     def to_sql(self):
         res = 'SET IDENTITY_INSERT Workshop_reservations ON'
-        # res += '\n'
-        # res += self.reservations[0].to_sql()
-        # for v in range(1, len(self.reservations)):
-        #     res += ','
-        #     res += self.reservations[v].to_sql(False)
         res += table_to_sql(self.reservations)
         res += '\nSET IDENTITY_INSERT Workshop_reservations OFF'
         self.reservations = []

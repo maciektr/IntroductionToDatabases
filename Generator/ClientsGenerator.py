@@ -52,17 +52,6 @@ class ClientsGenerator:
         res += table_to_sql(self.clients)
 
         res += '\nSET IDENTITY_INSERT Clients OFF'
-        # res += '\n'
-        # res += self.companies[0].to_sql()
-        # lid = 0
-        # for v in range(1, len(self.companies)):
-        #     if v - lid < 999:
-        #         res += ','
-        #         res += self.companies[v].to_sql(False)
-        #     else:
-        #         lid = v
-        #         res += '\n'
-        #         res += self.companies[v].to_sql()
         res += table_to_sql(self.companies)
         res += '\n'
         res += self.participants_gen.to_sql()

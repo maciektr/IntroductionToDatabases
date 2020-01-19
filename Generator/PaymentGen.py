@@ -30,14 +30,9 @@ class PaymentGen:
                 i += 1
             values[-1] += round(price - int(price), 2)
             for value in values:
-                # day_res = self.faker.date_between(start_date=res.date, end_date=res.due_price)
                 self.payments.append(Payment(value, res, self.faker, self.rand))
 
     def to_sql(self):
-        # res = self.payments[0].to_sql()
-        # for v in range(1, len(self.payments)):
-        #     res += ','
-        #     res += self.payments[v].to_sql(False)
         res = table_to_sql(self.payments, False)
         self.payments = []
         return res

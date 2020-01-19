@@ -12,10 +12,6 @@ class EsdGenerator:
         self.esds = []
 
     def to_sql(self):
-        # res = self.esds[0].to_sql()
-        # for v in range(1,len(self.esds)):
-        #     res += ','
-        #     res += self.esds[v].to_sql(False)
         res = table_to_sql(self.esds, False)
         self.esds = []
         return res

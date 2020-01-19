@@ -16,11 +16,6 @@ class WorkshopGenerator:
     def to_sql(self):
         res = 'SET IDENTITY_INSERT Workshops ON'
         res += table_to_sql(self.workshops)
-        # res += '\n'
-        # res += self.workshops[0].to_sql()
-        # for v in range(1,len(self.workshops)):
-        #     res += ','
-        #     res += self.workshops[v].to_sql(False)
         res += '\nSET IDENTITY_INSERT Workshops OFF'
         self.workshops = []
         return res

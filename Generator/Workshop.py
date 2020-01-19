@@ -11,8 +11,6 @@ class Workshop:
         self.price = round(self.rand.uniform(10.0, 1000.0), 2)
         self.start = self.random_time(day.date)
         self.end = self.random_time(day.date)
-        # while self.start == self.end:
-        #     self.end = datetime.combine(day, time(self.rand.randint(0, 23), self.rand.randint(0, 59)))
         if self.start > self.end:
             self.start, self.end = self.end, self.start
         self.topic = self.faker.bs()

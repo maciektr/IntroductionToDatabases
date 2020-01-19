@@ -27,11 +27,6 @@ class ConfDaysGenerator:
     def to_sql(self):
         res = 'SET IDENTITY_INSERT Conference_days ON'
         res += table_to_sql(self.days)
-        # res += '\n'
-        # res += self.days[0].to_sql()
-        # for v in range(1, len(self.days)):
-        #     res += ','
-        #     res += self.days[v].to_sql(False)
         res += '\nSET IDENTITY_INSERT Conference_days OFF'
         self.days = []
         return res
