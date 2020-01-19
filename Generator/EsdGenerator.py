@@ -22,4 +22,6 @@ class EsdGenerator:
     def make(self, days):
         for day in days:
             for _ in range(self.rand.randint(1, 5)):
-                self.esds.append(Esd(self.faker, self.rand, day))
+                e = Esd(self.faker, self.rand, day)
+                self.esds.append(e)
+                day.esds.append(e)

@@ -2,7 +2,7 @@ from AbstractClass import *
 
 
 class WorkshopRes(AbstractClass):
-    def __init__(self, res_id, workshop, conf_res_id, faker, rand):
+    def __init__(self, res_id, workshop, conf_res, faker, rand):
         self.faker = faker
         self.rand = rand
 
@@ -12,8 +12,10 @@ class WorkshopRes(AbstractClass):
             self.faker.date_between(start_date=datetime.today(), end_date=workshop.start.date()))
         self.due_price = self.date + timedelta(weeks=self.rand.randint(1, 4))
         self.nr_seats = self.rand.randint(1, workshop.free_seats)
-        self.conf_res_id = conf_res_id
+        self.conf_res_id = conf_res.res_id
         self.active = self.rand.randint(0, 1)
+
+        conf_res.workshops_price += self.nr_seats * workshop.price
 
     def to_sql(self):
         return "INSERT INTO Workshop_reservations (reservation_id, workshop_id, reservation_date, due_price, nr_of_seats, Conference_day_res_id, active) VALUES (" + str(

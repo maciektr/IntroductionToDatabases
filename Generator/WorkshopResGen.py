@@ -27,6 +27,6 @@ class WorkshopResGen:
             while work.free_seats > 0 and n_res > 0:
                 n_res -= 1
                 self.reservations.append(
-                    WorkshopRes(self.next_res_id, work, self.conf_day_res_gen.choice().res_id, self.faker, self.rand))
+                    WorkshopRes(self.next_res_id, work, self.conf_day_res_gen.choice(), self.faker, self.rand))
                 self.next_res_id += 1
                 work.free_seats -= self.reservations[-1].nr_seats

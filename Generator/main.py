@@ -8,6 +8,7 @@ from WorkshopGenerator import *
 from WorkshopResGen import *
 from ConfRegistrationGen import *
 from WorkshopRegistrationGen import *
+from PaymentGen import *
 
 from random import Random
 from faker import Faker
@@ -55,6 +56,10 @@ conf_reg_gen.make(day_res_gen.reservations)
 wor_reg_gen = WorkshopRegistrationGen(rand, part_gen)
 generators.append(wor_reg_gen)
 wor_reg_gen.make(wor_res_gen.reservations)
+
+pay_gen = PaymentGen(rand, faker)
+generators.append(pay_gen)
+pay_gen.make(day_res_gen.reservations)
 
 for g in generators:
     print(g.to_sql())

@@ -1,0 +1,42 @@
+from Payment import *
+
+
+class PaymentGen:
+    def __init__(self, rand, faker):
+        self.rand = rand
+        self.faker = faker
+        self.payments = []
+
+    def make(self, reservations):
+        for res in reservations:
+            price = res.workshops_price + res.day_price
+            payed = int(price)
+            if self.rand.randint(1, 1000) % 5 == 0:  # nie oplacone
+                payed = 0 if self.rand.randint(0, 1000) % 2 == 0 else self.rand.randint(0, int(price))
+            if payed == 0:
+                continue
+            n_payments = self.rand.randint(1, 4)
+            values = [payed // n_payments for _ in range(n_payments)]
+            i = 0
+            while sum(values) < payed:
+                values[i % n_payments] += 1
+                i += 1
+            i = 0
+            while i < n_payments:
+                p = self.rand.randint(0, values[i])
+                values[i] -= p
+                values[(i + 1) % n_payments] += p
+                i += 1
+            values[-1] += round(price - int(price), 2)
+            for value in values:
+                # day_res = self.faker.date_between(start_date=res.date, end_date=res.due_price)
+                self.payments.append(Payment(value, res, self.faker, self.rand))
+
+    def to_sql(self):
+        res = ''
+        for v in self.payments:
+            res += v.to_sql()
+            res += '\n'
+        res = res[:-1]
+        self.payments = []
+        return res

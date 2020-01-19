@@ -10,6 +10,7 @@ class ConferenceDay:
         self.date = (self.faker.date_between(start_date='today', end_date='+5y')) if day is None else day
         self.numb_of_seats = self.rand.randint(30,200)
         self.free_seats = self.numb_of_seats
+        self.esds = []
 
     def to_sql(self):
         return "INSERT INTO Conference_days (conference_day_id, conference_id, date, standard_price, student_discount, number_of_seats) VALUES (" + str(
