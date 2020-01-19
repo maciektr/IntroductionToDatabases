@@ -12,7 +12,7 @@ class PaymentGen:
         for res in reservations:
             price = res.workshops_price + res.day_price
             payed = int(price)
-            if False: #self.rand.randint(1, 1000) % 100 == 0:  # nie oplacone
+            if self.rand.randint(1, 1000) % 30 == 0:  # nie oplacone
                 payed = 0 if self.rand.randint(0, 1000) % 2 == 0 else self.rand.randint(0, int(price))
             if payed == 0:
                 continue
