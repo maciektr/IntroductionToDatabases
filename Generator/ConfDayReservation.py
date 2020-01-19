@@ -21,7 +21,7 @@ class ConfDayReservation(AbstractClass):
         self.day_price += day.price * (1 - day.stud_disc) * self.student_seats
         esds = list(filter(lambda x: x.date > self.date.date(), day.esds))
         esds = sorted(esds, key=lambda x: x.date)
-        esd = 0 if len(esds) == 0 else esds[-1].discount
+        esd = 0 if len(esds) == 0 else esds[0].discount
         self.day_price *= (1 - esd)
 
     def to_sql(self, start=True):
