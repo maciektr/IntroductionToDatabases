@@ -10,6 +10,8 @@ class PaymentGen:
 
     def make(self, reservations):
         for res in reservations:
+            if res.active == 0 and self.rand.randint(1,1000) % 8 != 0:
+                continue
             price = res.workshops_price + res.day_price
             payed = int(price)
             if self.rand.randint(1, 1000) % 30 == 0:  # nie oplacone

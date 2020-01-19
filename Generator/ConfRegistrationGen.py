@@ -16,6 +16,8 @@ class ConfRegistrationGen:
 
     def make(self, reservations):
         for res in reservations:
+            if res.active == 0:
+                continue
             parts = set([p.part_id for p in self.part_gen.participants])
 
             for _ in range(res.adult_seats):

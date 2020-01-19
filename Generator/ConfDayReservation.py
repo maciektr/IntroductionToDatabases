@@ -11,7 +11,7 @@ class ConfDayReservation(AbstractClass):
         self.clients_id = clients_id
 
         self.date = self.random_time(self.faker.date_between(start_date=datetime.today(), end_date=day.date))
-        self.active = self.rand.randint(0, 1)
+        self.active = 1 if self.rand.randint(1, 1000) % 8 == 0 else 0
         self.due_price = self.date + timedelta(weeks=self.rand.randint(1, 4))
         self.adult_seats = self.rand.randint(1, min(day.free_seats, part_count))
         self.student_seats = self.rand.randint(0, max(0, min(day.free_seats, part_count) - self.adult_seats))

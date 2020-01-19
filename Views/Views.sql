@@ -39,6 +39,7 @@ SELECT clients_id,
        dbo.confReservationPrice(reservation_id) - dbo.confReservationPaidAmount(reservation_id) as left_to_pay
 FROM Conference_day_reservations
 WHERE dbo.confReservationPrice(reservation_id) - dbo.confReservationPaidAmount(reservation_id) > 0.01
+    and Conference_day_reservations.active = 1
 GO
 
 -- Clients with unpaid reservations who exceeded payment deadline
