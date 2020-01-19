@@ -33,7 +33,8 @@ class ConfDayResGenerator:
             while day.free_seats > 0 and n_res > 0:
                 n_res -= 1
                 self.reservations.append(
-                    ConfDayReservation(self.next_res_id, self.clients_gen.choice().cl_id, day, self.faker, self.rand))
+                    ConfDayReservation(self.next_res_id, self.clients_gen.choice().cl_id, day,
+                                       len(self.clients_gen.participants_gen.participants), self.faker, self.rand))
                 self.next_res_id += 1
                 day.free_seats -= self.reservations[-1].adult_seats
                 day.free_seats -= self.reservations[-1].student_seats

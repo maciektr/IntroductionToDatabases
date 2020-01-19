@@ -4,10 +4,11 @@ from Workshop import *
 
 
 class WorkshopGenerator:
-    def __init__(self, rand=Random(), faker=Faker(['pl_PL']), next_workshop_id=1):
+    def __init__(self, part_gen, rand=Random(), faker=Faker(['pl_PL']), next_workshop_id=1):
         self.faker = faker
         self.rand = rand
 
+        self.part_gen = part_gen
         self.workshops = []
         self.next_workshop_id = next_workshop_id
         self.max_nr_workshops = 6
@@ -24,5 +25,5 @@ class WorkshopGenerator:
     def make(self, days):
         for day in days:
             for _ in range(self.rand.randint(2, self.max_nr_workshops)):
-                self.workshops.append(Workshop(self.next_workshop_id, day, self.faker, self.rand))
+                self.workshops.append(Workshop(self.next_workshop_id, day, self.part_gen.part_count(),self.faker, self.rand))
                 self.next_workshop_id += 1

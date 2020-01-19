@@ -2,7 +2,7 @@ from datetime import datetime, timedelta, time
 
 
 class Workshop:
-    def __init__(self, workshop_id, day, faker, rand):
+    def __init__(self, workshop_id, day, part_count, faker, rand):
         self.faker = faker
         self.rand = rand
 
@@ -11,12 +11,12 @@ class Workshop:
         self.price = round(self.rand.uniform(10.0, 1000.0), 2)
         self.start = self.random_time(day.date)
         self.end = self.random_time(day.date)
-        while self.start == self.end:
-            self.end = datetime.combine(day, time(self.rand.randint(0, 23), self.rand.randint(0, 59)))
+        # while self.start == self.end:
+        #     self.end = datetime.combine(day, time(self.rand.randint(0, 23), self.rand.randint(0, 59)))
         if self.start > self.end:
             self.start, self.end = self.end, self.start
         self.topic = self.faker.bs()
-        self.numb_seats = self.rand.randint(10, day.numb_of_seats)
+        self.numb_seats = self.rand.randint(1, min(day.numb_of_seats, part_count))
         self.free_seats = self.numb_seats
 
     def random_time(self, date):
