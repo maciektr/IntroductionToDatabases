@@ -9,5 +9,5 @@ BEGIN
     DECLARE @owed MONEY = (SELECT SUM(dbo.confReservationPrice(cdr.reservation_id))
                            FROM Conference_day_reservations cdr
                            WHERE cdr.clients_id = @ClientId)
-    RETURN @paid - @owed
+    RETURN ROUND(ISNULL(@paid,0) - ISNULL(@owed,0),2)
 END
