@@ -24,8 +24,9 @@ class ConfDayReservation(AbstractClass):
         esd = 0 if len(esds) == 0 else esds[-1].discount
         self.day_price *= (1 - esd)
 
-    def to_sql(self):
-        return "INSERT INTO Conference_day_reservations (reservation_id, conference_day_id, clients_id, reservation_date, active, due_price, adult_seats, student_seats) VALUES (" + str(
+    def to_sql(self, start=True):
+        values = "(" + str(
             self.res_id) + "," + str(self.day_id) + "," + str(self.clients_id) + ",\'" + str(self.date) + "\',\'" + str(
             self.active) + "\',\'" + str(self.due_price) + "\'," + str(self.adult_seats) + "," + str(
             self.student_seats) + ")"
+        return "INSERT INTO Conference_day_reservations (reservation_id, conference_day_id, clients_id, reservation_date, active, due_price, adult_seats, student_seats) VALUES " + values if start else values

@@ -1,6 +1,7 @@
 from faker import Faker
 from random import Random
 from Conference import *
+from AbstractGenerator import table_to_sql
 
 
 class ConferenceGenerator:
@@ -13,9 +14,12 @@ class ConferenceGenerator:
 
     def to_sql(self):
         res = 'SET IDENTITY_INSERT Conferences ON'
-        for v in self.conferences:
-            res += '\n'
-            res += v.to_sql()
+        # res += '\n'
+        # res += self.conferences[0].to_sql()
+        # for v in range(1, len(self.conferences)):
+        #     res += ','
+        #     res += self.conferences[v].to_sql(False)
+        res += table_to_sql(self.conferences)
         res += '\nSET IDENTITY_INSERT Conferences OFF'
         self.conferences = []
         return res

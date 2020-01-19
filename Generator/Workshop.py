@@ -22,7 +22,7 @@ class Workshop:
     def random_time(self, date):
         return datetime.combine(date, time(self.rand.randint(0, 23), self.rand.randint(0, 59)))
 
-    def to_sql(self):
-        return "INSERT INTO Workshops (workshop_id, conference_day_id, start_time, end_time, topic, price, number_of_seats) VALUES (" + str(
-            self.workshop_id) + "," + str(self.day_id) + ",\'" + str(self.start) + "\',\'" + str(
+    def to_sql(self, start=True):
+        values = "(" + str(self.workshop_id) + "," + str(self.day_id) + ",\'" + str(self.start) + "\',\'" + str(
             self.end) + "\',\'" + self.topic + "\'," + str(self.price) + "," + str(self.numb_seats) + ")"
+        return "INSERT INTO Workshops (workshop_id, conference_day_id, start_time, end_time, topic, price, number_of_seats) VALUES " + values if start else values

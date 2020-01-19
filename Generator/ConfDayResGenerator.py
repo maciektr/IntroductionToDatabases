@@ -20,9 +20,11 @@ class ConfDayResGenerator:
 
     def to_sql(self):
         res = 'SET IDENTITY_INSERT Conference_day_reservations ON'
-        for v in self.reservations:
-            res += '\n'
-            res += v.to_sql()
+        res += '\n'
+        res += self.reservations[0].to_sql()
+        for v in range(1, len(self.reservations)):
+            res += ','
+            res += self.reservations[v].to_sql(False)
         res += '\nSET IDENTITY_INSERT Conference_day_reservations OFF'
         self.reservations = []
         return res

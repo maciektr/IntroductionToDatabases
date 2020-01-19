@@ -17,7 +17,9 @@ class WorkshopRes(AbstractClass):
 
         conf_res.workshops_price += self.nr_seats * workshop.price
 
-    def to_sql(self):
-        return "INSERT INTO Workshop_reservations (reservation_id, workshop_id, reservation_date, due_price, nr_of_seats, Conference_day_res_id, active) VALUES (" + str(
-            self.res_id) + "," + str(self.work_id) + ",\'" + str(self.date) + "\',\'" + str(self.due_price) + "\'," + str(
+    def to_sql(self, start=True):
+        values = "(" + str(
+            self.res_id) + "," + str(self.work_id) + ",\'" + str(self.date) + "\',\'" + str(
+            self.due_price) + "\'," + str(
             self.nr_seats) + ',' + str(self.conf_res_id) + ',' + str(self.active) + ")"
+        return "INSERT INTO Workshop_reservations (reservation_id, workshop_id, reservation_date, due_price, nr_of_seats, Conference_day_res_id, active) VALUES " + values if start else values

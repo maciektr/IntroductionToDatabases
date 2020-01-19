@@ -1,5 +1,6 @@
 from faker import Faker
 from Participant import *
+from AbstractGenerator import table_to_sql
 
 
 class ParticipantsGenerator:
@@ -24,9 +25,12 @@ class ParticipantsGenerator:
 
     def to_sql(self):
         res = 'SET IDENTITY_INSERT Participants ON'
-        for v in self.participants:
-            res += '\n'
-            res += v.to_sql()
+        # res += '\n'
+        # res += self.participants[0].to_sql()
+        # for v in range(1, len(self.participants)):
+        #     res += ','
+        #     res += self.participants[v].to_sql(False)
+        res += table_to_sql(self.participants)
         res += '\nSET IDENTITY_INSERT Participants OFF'
         self.participants = []
         return res

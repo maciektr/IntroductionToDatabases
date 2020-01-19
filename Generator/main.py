@@ -19,15 +19,18 @@ rand = Random()
 generators = []
 
 part_gen = ParticipantsGenerator(rand)
-part_gen.make(None, 10)
+part_gen.make(None, 4000)
+# part_gen.make(None, 5)
 
 clients_gen = ClientsGenerator(part_gen)
 generators.append(clients_gen)
-clients_gen.make(10)
+clients_gen.make(400)
+# clients_gen.make(10)
 
 conf_gen = ConferenceGenerator(rand, faker)
 generators.append(conf_gen)
-conf_gen.make(5)
+conf_gen.make(72)
+# conf_gen.make(3)
 
 day_gen = ConfDaysGenerator(rand, faker)
 generators.append(day_gen)

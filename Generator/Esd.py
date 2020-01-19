@@ -7,6 +7,6 @@ class Esd:
         self.discount = round(self.rand.uniform(0.0, 0.5), 2)
         self.date = self.faker.date_between(start_date='-2y', end_date=day.date)
 
-    def to_sql(self):
-        return "INSERT INTO Early_signup_discounts (conference_day_id, end_date, discount) VALUES (" + str(
-            self.day_id) + ",\'" + str(self.date) + "\'," + str(self.discount) + ")"
+    def to_sql(self, start=True):
+        values = "(" + str(self.day_id) + ",\'" + str(self.date) + "\'," + str(self.discount) + ")"
+        return "INSERT INTO Early_signup_discounts (conference_day_id, end_date, discount) VALUES " + values if start else values

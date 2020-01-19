@@ -10,6 +10,6 @@ class Payment(AbstractClass):
         self.date = self.random_time(self.faker.date_between(start_date=day_res.date, end_date=day_res.due_price))
         self.value = value
 
-    def to_sql(self):
-        return "INSERT INTO Payments (reservation_id, in_date, value) VALUES (" + str(self.res_id) + ",\'" + str(
-            self.date) + "\'," + str(self.value) + ")"
+    def to_sql(self, start=True):
+        values = "(" + str(self.res_id) + ",\'" + str(self.date) + "\'," + str(self.value) + ")"
+        return "INSERT INTO Payments (reservation_id, in_date, value) VALUES " + values if start else values

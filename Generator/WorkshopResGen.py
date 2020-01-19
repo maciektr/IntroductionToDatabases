@@ -1,6 +1,7 @@
 from random import Random
 from faker import Faker
 from WorkshopRes import *
+from AbstractGenerator import table_to_sql
 
 
 class WorkshopResGen:
@@ -14,16 +15,19 @@ class WorkshopResGen:
 
     def to_sql(self):
         res = 'SET IDENTITY_INSERT Workshop_reservations ON'
-        for v in self.reservations:
-            res += '\n'
-            res += v.to_sql()
+        # res += '\n'
+        # res += self.reservations[0].to_sql()
+        # for v in range(1, len(self.reservations)):
+        #     res += ','
+        #     res += self.reservations[v].to_sql(False)
+        res += table_to_sql(self.reservations)
         res += '\nSET IDENTITY_INSERT Workshop_reservations OFF'
         self.reservations = []
         return res
 
     def make(self, workshops):
         for work in workshops:
-            n_res = self.rand.randint(1, self.conf_day_res_gen.res_count()//4)
+            n_res = self.rand.randint(1, self.conf_day_res_gen.res_count() // 4)
             while work.free_seats > 0 and n_res > 0:
                 n_res -= 1
                 self.reservations.append(

@@ -1,4 +1,5 @@
 from ConfRegistration import *
+from AbstractGenerator import *
 
 
 class ConfRegistrationGen:
@@ -9,11 +10,12 @@ class ConfRegistrationGen:
         self.registrations = []
 
     def to_sql(self):
-        res = ''
-        for v in self.registrations:
-            res += v.to_sql()
-            res += '\n'
-        res = res[:-1]
+        # res = self.registrations[0].to_sql()
+        # for v in range(1,len(self.registrations)):
+        #     res += ','
+        #     res += self.registrations[v].to_sql(False)
+        # res = res[:-1]
+        res = table_to_sql(self.registrations, False)
         self.registrations = []
         return res
 

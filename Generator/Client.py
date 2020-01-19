@@ -8,6 +8,7 @@ class Client:
         self.zip_code = add[-1].split(' ')[0]
         self.city = ' '.join(add[-1].split(' ')[1:])
 
-    def to_sql(self):
+    def to_sql(self, start=True):
+        values = "(" + str(self.cl_id) + ",\'" + self.zip_code + "\',\'" + self.city + "\',\'" + self.address + "\')"
         return "INSERT INTO CLIENTS (id,zip_code, city, address) " \
-               "VALUES (" + str(self.cl_id) + ",\'" + self.zip_code + "\',\'" + self.city + "\',\'" + self.address + "\')"
+               "VALUES "+ values if start else values

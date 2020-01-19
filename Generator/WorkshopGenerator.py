@@ -1,6 +1,7 @@
 from random import Random
 from faker import Faker
 from Workshop import *
+from AbstractGenerator import table_to_sql
 
 
 class WorkshopGenerator:
@@ -11,19 +12,22 @@ class WorkshopGenerator:
         self.part_gen = part_gen
         self.workshops = []
         self.next_workshop_id = next_workshop_id
-        self.max_nr_workshops = 6
 
     def to_sql(self):
         res = 'SET IDENTITY_INSERT Workshops ON'
-        for v in self.workshops:
-            res += '\n'
-            res += v.to_sql()
+        res += table_to_sql(self.workshops)
+        # res += '\n'
+        # res += self.workshops[0].to_sql()
+        # for v in range(1,len(self.workshops)):
+        #     res += ','
+        #     res += self.workshops[v].to_sql(False)
         res += '\nSET IDENTITY_INSERT Workshops OFF'
         self.workshops = []
         return res
 
     def make(self, days):
         for day in days:
-            for _ in range(self.rand.randint(2, self.max_nr_workshops)):
-                self.workshops.append(Workshop(self.next_workshop_id, day, self.part_gen.part_count(),self.faker, self.rand))
+            for _ in range(self.rand.randint(2, 6)):
+                self.workshops.append(
+                    Workshop(self.next_workshop_id, day, self.part_gen.part_count(), self.faker, self.rand))
                 self.next_workshop_id += 1

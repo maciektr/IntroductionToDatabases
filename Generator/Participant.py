@@ -10,12 +10,7 @@ class Participant:
         self.phone = self.faker.phone_number()
         self.email = self.faker.email()
 
-    def to_sql(self):
-        if self.client_id is not None:
-            res = "INSERT INTO Participants (participant_id,clients_id, name, surname, email, phone) VALUES (" + str(
-                self.part_id) + "," + str(self.client_id) + ",\'" + self.name + "\',\'" + self.surname + "\',\'" + self.email + "\',\'" + self.phone + "\')"
-        else:
-            res = "INSERT INTO Participants (participant_id, name, surname, email, phone) VALUES (" + str(
-                self.part_id) + ",\'" + self.name + "\',\'" + self.surname + "\',\'" + self.email + "\',\'" + self.phone + "\')"
-        return res
-
+    def to_sql(self, start=True):
+        values = "(" + str(self.part_id) + "," + (str(
+            self.client_id) if self.client_id is not None else 'null') + ",\'" + self.name + "\',\'" + self.surname + "\',\'" + self.email + "\',\'" + self.phone + "\')"
+        return "INSERT INTO Participants (participant_id,clients_id, name, surname, email, phone) VALUES " + values if start else values

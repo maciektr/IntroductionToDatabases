@@ -25,6 +25,7 @@ class Company:
         res += str(sum % 11)
         return res
 
-    def to_sql(self):
-        return "INSERT INTO COMPANIES (companyName, nip, phone, clients_id, email) VALUES (\'" + self.name + "\',\'" + self.nip + "\',\'" + self.phone + "\'," + str(
+    def to_sql(self, start=True):
+        values = "(\'" + self.name + "\',\'" + self.nip + "\',\'" + self.phone + "\'," + str(
             self.clients_id) + ",\'" + self.email + "\')"
+        return "INSERT INTO COMPANIES (companyName, nip, phone, clients_id, email) VALUES "+values if start else values

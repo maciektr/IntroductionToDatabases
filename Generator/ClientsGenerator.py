@@ -5,6 +5,21 @@ from Client import *
 from Company import *
 
 
+def table_to_sql(table):
+    res = '\n'
+    res += table[0].to_sql()
+    lid = 0
+    for v in range(1, len(table)):
+        if v - lid < 999:
+            res += ','
+            res += table[v].to_sql(False)
+        else:
+            lid = v
+            res += '\n'
+            res += table[v].to_sql()
+    return res
+
+
 class ClientsGenerator:
     def __init__(self, participants_gen, next_client_id=1):
         self.faker = Faker(['pl_PL'])
@@ -34,13 +49,21 @@ class ClientsGenerator:
 
     def to_sql(self):
         res = 'SET IDENTITY_INSERT Clients ON'
-        for v in self.clients:
-            res += '\n'
-            res += v.to_sql()
+        res += table_to_sql(self.clients)
+
         res += '\nSET IDENTITY_INSERT Clients OFF'
-        for v in self.companies:
-            res += '\n'
-            res += v.to_sql()
+        # res += '\n'
+        # res += self.companies[0].to_sql()
+        # lid = 0
+        # for v in range(1, len(self.companies)):
+        #     if v - lid < 999:
+        #         res += ','
+        #         res += self.companies[v].to_sql(False)
+        #     else:
+        #         lid = v
+        #         res += '\n'
+        #         res += self.companies[v].to_sql()
+        res += table_to_sql(self.companies)
         res += '\n'
         res += self.participants_gen.to_sql()
 
