@@ -1,65 +1,49 @@
-import random
-import ParticipantsGenerator
 from faker import Faker
+import random
+from ParticipantsGenerator import *
+from Client import *
+from Company import *
 
 
 class ClientsGenerator:
-    def __init__(self, id=0, pgen=None):
-        self.start_id = id
+    def __init__(self, participants_gen, next_client_id=1):
         self.faker = Faker(['pl_PL'])
         self.rand = random.Random()
-        self.part_gen = ParticipantsGenerator.ParticipantsGenerator() if pgen is None else pgen
-        self.first_id = self.start_id + 1
 
-    def get_clients_ids(self):
-        return [i for i in range(self.first_id, self.start_id + 1)]
+        self.next_client_id = next_client_id
+        self.participants_gen = participants_gen
+        self.clients = []
+        self.companies = []
 
-    def get_participants_generator(self):
-        return self.part_gen
+    def choice(self):
+        return self.rand.choice(self.clients)
 
-    def random_nip(self):
-        res = ''
-        sum = 0
-        weights = [6, 5, 7, 2, 3, 4, 5, 6, 7]
-        for i in range(8):
-            k = self.rand.randint(1 if i < 3 else 0, 9)
-            sum += weights[i] * k
-            res += str(k)
-        k = self.rand.randint(0, 9)
-        if (sum + (k * weights[8])) % 11 == 10:
-            k += (1 if k + 1 < 10 else -1)
-        res += str(k)
-        sum += k * weights[8]
-        res += str(sum % 11)
-        return res
+    def clients_count(self):
+        return len(self.clients)
 
-    def get_random_company_as_sql(self, clients_id=0):
+    def make(self, n=1):
+        for _ in range(n):
+            cl = Client(self.next_client_id, self.faker)
+            if self.rand.randint(0, 1) == 0:
+                cm = Company(self.next_client_id, self.faker, self.rand)
+                self.companies.append(cm)
+            else:
+                self.participants_gen.make(self.next_client_id)
+            self.next_client_id += 1
+            self.clients.append(cl)
 
-        name = self.faker.company()
-        phone = self.faker.phone_number()
-        email = self.faker.email()
-        nip = self.random_nip()
-        return "INSERT INTO COMPANIES (companyName, nip, phone, clients_id, email) VALUES (\'" + name + "\',\'" + nip + "\',\'" + phone + "\'," + str(
-            clients_id) + ",\'" + email + "\')"
+    def to_sql(self):
+        res = 'SET IDENTITY_INSERT Clients ON'
+        for v in self.clients:
+            res += '\n'
+            res += v.to_sql()
+        res += '\nSET IDENTITY_INSERT Clients OFF'
+        for v in self.companies:
+            res += '\n'
+            res += v.to_sql()
+        res += '\n'
+        res += self.participants_gen.to_sql()
 
-    def get_random_client_as_sql(self):
-        add = self.faker.address().split('\n')
-        address = add[0]
-        zip_code = add[-1].split(' ')[0]
-        city = ' '.join(add[-1].split(' ')[1:])
-        self.start_id += 1
-
-        client_sql = "INSERT INTO CLIENTS (id,zip_code, city, address) " \
-                     "VALUES (" + str(self.start_id) + ",\'" + zip_code + "\',\'" + city + "\',\'" + address + "\')"
-
-        # res = 'SET IDENTITY_INSERT Clients ON\n'
-        res = client_sql + "\n"
-        if self.rand.randint(0, 1) == 0:
-              res+= self.get_random_company_as_sql(self.start_id)
-        else:
-            res += 'SET IDENTITY_INSERT Clients OFF'
-            res += '\nSET IDENTITY_INSERT Participants ON'
-            res+='\n'+self.part_gen.get_random_participant_as_sql(self.start_id)
-            res += '\nSET IDENTITY_INSERT Participants OFF'
-            res += '\nSET IDENTITY_INSERT Clients ON'
+        self.clients = []
+        self.companies = []
         return res
