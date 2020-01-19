@@ -5,6 +5,8 @@ class Participant:
         self.faker = faker
 
         n = self.faker.name().split(' ')
+        if n[0] == 'pani' or n[0] == 'pan' or n[0] == 'Pan' or n[0] == 'Pani':
+            n = n[1:]
         self.name = n[0]
         self.surname = ' '.join(n[1:])
         self.phone = self.faker.phone_number()
