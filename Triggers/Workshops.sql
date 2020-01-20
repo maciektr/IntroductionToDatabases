@@ -7,7 +7,7 @@ CREATE TRIGGER StartHourLtEndHour
     AFTER INSERT, UPDATE AS
 BEGIN
     DECLARE @StartTime date = (SELECT start_time FROM inserted)
-    DECLARE @EndTime int = (SELECT end_time FROM inserted)
+    DECLARE @EndTime date = (SELECT end_time FROM inserted)
     IF (@StartTime > @EndTime)
         BEGIN
             DECLARE @message varchar(100) = 'Workshop cant begin after it ends.';
@@ -21,7 +21,7 @@ CREATE TRIGGER WorkshopPlacesLtConfPlaces
     AFTER INSERT, UPDATE AS
 BEGIN
     DECLARE @confDayId int = (SELECT conference_day_id FROM inserted)
-    DECLARE @nrOfseatsW date = (SELECT number_of_seats FROM inserted)
+    DECLARE @nrOfseatsW int = (SELECT number_of_seats FROM inserted)
     DECLARE @nrOfseatsC int = (SELECT number_of_seats FROM Conference_days WHERE conference_day_id = @confDayId)
     IF (@nrOfseatsW > @nrOfseatsC)
         BEGIN
@@ -63,7 +63,7 @@ BEGIN
     DECLARE @ConfDayResID int = (SELECT Conference_day_res_id FROM inserted)
     DECLARE @ConfDayID int = (SELECT conference_day_id
                               FROM Conference_day_reservations
-                              WHERE Conference_day_res_id = @ConfDayResID)
+                              WHERE reservation_id = @ConfDayResID)
     DECLARE @ConfDayDate date = (SELECT date FROM Conference_days WHERE conference_day_id = @ConfDayID)
     IF (@ConfDayDate <> @WorkshopDate)
         BEGIN
@@ -77,7 +77,7 @@ CREATE TRIGGER CheckIfCorrespConfReservationActive
     ON Workshop_reservations
     AFTER INSERT, UPDATE AS
 BEGIN
-    DECLARE @ConfResID date = (SELECT Conference_day_res_id FROM inserted)
+    DECLARE @ConfResID int = (SELECT Conference_day_res_id FROM inserted)
     IF ((SELECT active FROM Conference_day_reservations cdr WHERE cdr.reservation_id = @ConfResID) = 0)
         BEGIN
             DECLARE @Message varchar(100) = 'Corresponding conference day reservation is not active';
@@ -86,7 +86,6 @@ BEGIN
 END
 
 -- procedura usuwająca uczestników warsztatów zapisanych na dezaktywowaną rezerwację
--- TODO isActive neccessary? -> forces manual CASCADE
 CREATE TRIGGER OnDeactivateWReservation
     ON Workshop_reservations
     AFTER UPDATE AS
