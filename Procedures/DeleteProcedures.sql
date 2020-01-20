@@ -15,14 +15,15 @@ BEGIN
 END
 GO
 
-CREATE PROCEDURE DeleteWorkshopReservation @ReservationID int
+CREATE PROCEDURE DeleteconferenceRegistration @ParticipantID int, @ReservationID int
 AS
 BEGIN
     SET NOCOUNT ON;
     BEGIN TRY
         BEGIN TRAN DELETE
-                   FROM Workshop_reservations
+                   FROM Conference_day_registration
                    WHERE reservation_id = @ReservationId
+                     AND Participant_id = @ParticipantID
         COMMIT TRAN
     END TRY
     BEGIN CATCH
