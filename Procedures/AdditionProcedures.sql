@@ -150,54 +150,112 @@ CREATE PROCEDURE AddWorkshop @conference_day_id int,
                              @number_of_seats int
 AS
 BEGIN
-    set nocount on;
-    insert into Workshops(conference_day_id, start_time, end_time, topic, price, number_of_seats)
-    values (@conference_day_id, @start_time, @end_time, @topic, @price, @number_of_seats)
+    SET NOCOUNT ON;
+    INSERT INTO Workshops(conference_day_id, start_time, end_time, topic, price, number_of_seats)
+    VALUES (@conference_day_id, @start_time, @end_time, @topic, @price, @number_of_seats)
 END
 GO
 
 
-create procedure RegisterParticipantForConferenceDay @reservation_id int, @Participant_id int, @is_student bit
-as
-begin
-    set nocount on;
-    insert into Conference_day_registration(reservation_id, Participant_id, is_student)
-    values (@reservation_id, @Participant_id, @is_student)
+CREATE PROCEDURE RegisterParticipantForConferenceDay @reservation_id int, @Participant_id int, @is_student bit
+AS
+BEGIN
+    SET NOCOUNT ON;
+    INSERT INTO Conference_day_registration(reservation_id, Participant_id, is_student)
+    VALUES (@reservation_id, @Participant_id, @is_student)
 end
 go
 
-create procedure RegisterParticipantForWorkshop @reservation_id int, @Participant_id int
-as
-begin
-    set nocount on;
-    insert into Workshop_registration(reservation_id, Participant_id)
-    values (@reservation_id, @Participant_id)
+CREATE PROCEDURE RegisterParticipantForWorkshop @reservation_id int, @Participant_id int
+AS
+BEGIN
+    SET NOCOUNT ON;
+    INSERT INTO Workshop_registration(reservation_id, Participant_id)
+    VALUES (@reservation_id, @Participant_id)
 end
 go
 
-create procedure AddConferenceDayReservation @conference_day_id int,
+CREATE PROCEDURE AddConferenceDayReservation @conference_day_id int,
                                              @clients_id int,
                                              @reservation_date datetime,
                                              @due_price datetime,
                                              @adult_seats int,
                                              @student_seats int
-as
-begin
-    set nocount on;
-    insert into Conference_day_reservations(conference_day_id, clients_id, reservation_date, due_price,
+AS
+BEGIN
+    SET NOCOUNT ON;
+    IF ((SELECT COUNT(conference_day_id) FROM Conference_days WHERE conference_day_id = @conference_day_id) = 0)
+        BEGIN
+            THROW 52000,'There is no such conference day in database', 1;
+        END
+    INSERT INTO Conference_day_reservations(conference_day_id, clients_id, reservation_date, due_price,
                                             adult_seats, student_seats)
-    values (@conference_day_id, @clients_id, @reservation_date, @due_price, @adult_seats, @student_seats)
+    VALUES (@conference_day_id, @clients_id, @reservation_date, @due_price, @adult_seats, @student_seats)
 end
 go
 
-create procedure AddWorkshopReservation @workshop_id int,
+CREATE PROCEDURE AddConferenceReservation @conference_id int,
+                                          @clients_id int,
+                                          @reservation_date datetime,
+                                          @due_price datetime,
+                                          @adult_seats int,
+                                          @student_seats int
+AS
+BEGIN
+    SET NOCOUNT ON;
+    IF ((SELECT COUNT(conference_id) FROM Conferences WHERE Conference_id = @conference_id) = 0)
+        BEGIN
+            THROW 52000,'There is no such conference in database', 1;
+        END
+
+    CREATE TABLE #ids
+    (
+        rn int,
+        id int
+    )
+    INSERT INTO #ids
+    SELECT DISTINCT row_number() over (order by conference_day_id) as rn, conference_day_id as id
+    FROM Conference_days
+    WHERE conference_id = @conference_id;
+
+
+    DECLARE @id int
+    DECLARE @totalrows int = (select count(*) from #ids)
+    IF @totalrows=0
+        BEGIN
+            THROW 52000,'This conference has no days defined', 1;
+        END
+    DECLARE @currentrow int = 1
+
+    WHILE @currentrow <= @totalrows
+        BEGIN
+            SET @id = (select id from #ids where rn = @currentrow)
+            EXEC AddConferenceDayReservation
+                 @id,
+                 @clients_id,
+                 @reservation_date,
+                 @due_price,
+                 @adult_seats,
+                 @student_seats
+            SET @currentrow = @currentrow + 1
+        END
+
+END
+GO
+
+CREATE PROCEDURE AddWorkshopReservation @workshop_id int,
                                         @conf_reservation_id int,
                                         @nr_of_seats int,
                                         @weeks_to_pay int
-as
-begin
-    set nocount on;
-    insert into Workshop_reservations(workshop_id, Conference_day_res_id, nr_of_seats, due_price)
-    values (@workshop_id, @conf_reservation_id, @nr_of_seats, DATEADD(week, @weeks_to_pay, GETDATE()))
-end
-go
+AS
+BEGIN
+    SET NOCOUNT ON;
+    IF ((SELECT COUNT(workshop_id) FROM Workshops WHERE workshop_id = @workshop_id) = 0)
+        BEGIN
+            THROW 52000,'There is no such workshop in database', 1;
+        END
+
+    INSERT INTO Workshop_reservations(workshop_id, Conference_day_res_id, nr_of_seats, due_price)
+    VALUES (@workshop_id, @conf_reservation_id, @nr_of_seats, DATEADD(week, @weeks_to_pay, GETDATE()))
+END
+GO
