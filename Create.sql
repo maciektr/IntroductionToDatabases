@@ -1,6 +1,3 @@
--- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2020-01-20 21:26:05.056
-
 -- tables
 -- Table: Clients
 CREATE TABLE Clients (
