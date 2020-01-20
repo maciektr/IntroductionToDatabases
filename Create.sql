@@ -1,3 +1,6 @@
+-- Created by Vertabelo (http://vertabelo.com)
+-- Last modification date: 2020-01-20 15:28:11.151
+
 -- tables
 -- Table: Clients
 CREATE TABLE Clients (
@@ -114,7 +117,7 @@ CREATE TABLE Workshops (
     conference_day_id int  NOT NULL,
     start_time datetime  NOT NULL,
     end_time datetime  NOT NULL CHECK (end_time >= GETDATE()),
-    topic text  NOT NULL,
+    topic varchar(100)  NOT NULL,
     price money  NOT NULL CHECK (price >= 0),
     number_of_seats int  NOT NULL DEFAULT 0 CHECK (number_of_seats >= 0),
     CONSTRAINT Workshops_pk PRIMARY KEY  (workshop_id)

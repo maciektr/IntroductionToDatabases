@@ -37,29 +37,44 @@ AS
 SELECT clients_id,
        reservation_id,
        due_price                                                                                as to_pay_until,
-       dbo.confReservationPrice(reservation_id) - dbo.confReservationPaidAmount(reservation_id) as left_to_pay
+       DATEDIFF(DAY, GETDATE(), due_price) as days_left,
+       dbo.confReservationPrice(reservation_id) - dbo.confReservationPaidAmount(reservation_id) as left_to_pay,
+       dbo.showClientsName(clients_id)                                                          as clients_name
 FROM Conference_day_reservations
 WHERE dbo.confReservationPrice(reservation_id) - dbo.confReservationPaidAmount(reservation_id) > 0.01
   and Conference_day_reservations.active = 1
 GO
 
 -- Same but only for companies
--- CREATE VIEW CompaniesWithUnpaidReservations
--- AS
---
--- GO
+CREATE VIEW CompaniesWithUnpaidReservations
+AS
+    SELECT *
+    FROM ClientsWithUnpaidReservations
+    WHERE dbo.isClientCompany(clients_id) = 1
+GO
 
 -- Same but only for individual clients
--- CREATE VIEW IndividualClientsWithUnpaidReservations
--- AS
--- GO
+CREATE VIEW IndividualClientsWithUnpaidReservations
+AS
+    SELECT *
+    FROM ClientsWithUnpaidReservations
+    WHERE dbo.isClientCompany(clients_id) = 0
+GO
+
+-- Same, but with the earliest payment deadline
+CREATE VIEW UnpaidReservationsWithEarliestDeadline
+AS
+    SELECT TOP 10 *
+    FROM ClientsWithUnpaidReservations
+    ORDER BY to_pay_until ASC
+GO
 
 -- Clients with unpaid reservations who exceeded payment deadline
 CREATE VIEW ClientsWithExceededPaymentDeadline
 AS
-SELECT *
-FROM ClientsWithUnpaidReservations
-WHERE to_pay_until < GETDATE()
+    SELECT *
+    FROM ClientsWithUnpaidReservations
+    WHERE to_pay_until < GETDATE()
 GO
 
 -- Workshops with free seats available
@@ -138,4 +153,66 @@ AS
     FROM Workshop_reservations
          INNER JOIN Conference_day_reservations Cdr on Workshop_reservations.Conference_day_res_id = Cdr.reservation_id
     WHERE Workshop_reservations.active = 0
+GO
+
+-- Show how popular conferences are
+CREATE VIEW ConferencePopularity
+AS
+    SELECT conf.Conference_id, conf.name, SUM(cdr.student_seats + cdr.adult_seats) AS participants_count
+    FROM Conferences conf INNER JOIN Conference_days cd on conf.Conference_id = cd.conference_id
+    INNER JOIN Conference_day_reservations cdr on cd.conference_day_id = cdr.conference_day_id
+    WHERE cdr.active = 1
+    GROUP BY conf.Conference_id, conf.name
+GO
+
+-- Show the most popular conferences
+CREATE VIEW MostPopularConference
+AS
+    SELECT TOP 20 *
+    FROM ConferencePopularity
+    ORDER BY participants_count DESC
+GO
+
+-- Show how popular Workshops are
+CREATE VIEW WorkshopPopularity
+AS
+    SELECT w.workshop_id, w.topic, SUM(wr.nr_of_seats) AS participants_count
+    FROM Workshops w INNER JOIN Workshop_reservations wr on w.workshop_id = wr.workshop_id
+    WHERE wr.active=1
+    GROUP BY w.workshop_id, w.topic
+GO
+
+-- Show the most popular workshops
+CREATE VIEW MostPopularWorkshops
+AS
+    SELECT TOP 20 *
+    FROM WorkshopPopularity
+    ORDER BY participants_count DESC
+GO
+
+-- Show all cities from which our clients are coming
+CREATE VIEW ClientsCities
+AS
+    SELECT DISTINCT city
+    FROM Clients
+GO
+
+-- Show all clients phone numbers
+CREATE VIEW ClientsPhones
+AS
+    SELECT DISTINCT phone
+    FROM Clients INNER JOIN Companies C on Clients.id = C.clients_id
+    UNION
+    SELECT DISTINCT phone
+    FROM Clients INNER JOIN Participants P on Clients.id = P.clients_id
+GO
+
+-- Show all clients phone numbers
+CREATE VIEW ClientsEmails
+AS
+    SELECT DISTINCT email
+    FROM Clients INNER JOIN Companies C on Clients.id = C.clients_id
+    UNION
+    SELECT DISTINCT email
+    FROM Clients INNER JOIN Participants P on Clients.id = P.clients_id
 GO
