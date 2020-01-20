@@ -1,5 +1,5 @@
 -- Created by Vertabelo (http://vertabelo.com)
--- Last modification date: 2020-01-20 15:28:11.151
+-- Last modification date: 2020-01-20 21:26:05.056
 
 -- tables
 -- Table: Clients
@@ -23,6 +23,12 @@ CREATE TABLE Companies (
     CONSTRAINT Companies_pk PRIMARY KEY  (clients_id)
 );
 
+CREATE INDEX companies_client_id on Companies (clients_id ASC)
+;
+
+CREATE INDEX companies_nip on Companies (nip ASC)
+;
+
 -- Table: Conference_day_registration
 CREATE TABLE Conference_day_registration (
     reservation_id int  NOT NULL,
@@ -30,6 +36,12 @@ CREATE TABLE Conference_day_registration (
     is_student bit  NOT NULL DEFAULT 0,
     CONSTRAINT Conference_day_registration_pk PRIMARY KEY  (reservation_id,Participant_id)
 );
+
+CREATE INDEX day_reg_part_id on Conference_day_registration (Participant_id ASC)
+;
+
+CREATE INDEX day_reg_res_id on Conference_day_registration (reservation_id ASC)
+;
 
 -- Table: Conference_day_reservations
 CREATE TABLE Conference_day_reservations (
@@ -44,6 +56,15 @@ CREATE TABLE Conference_day_reservations (
     CONSTRAINT Conference_day_reservations_pk PRIMARY KEY  (reservation_id)
 );
 
+CREATE INDEX day_res_day_id on Conference_day_reservations (conference_day_id ASC)
+;
+
+CREATE INDEX day_res_client_id on Conference_day_reservations (clients_id ASC)
+;
+
+CREATE INDEX day_res_pay_deadline on Conference_day_reservations (due_price ASC)
+;
+
 -- Table: Conference_days
 CREATE TABLE Conference_days (
     conference_day_id int  NOT NULL IDENTITY,
@@ -54,6 +75,9 @@ CREATE TABLE Conference_days (
     number_of_seats int  NOT NULL DEFAULT 0 CHECK (number_of_seats >= 0),
     CONSTRAINT Conference_days_pk PRIMARY KEY  (conference_day_id)
 );
+
+CREATE INDEX day_conf_id on Conference_days (conference_id ASC)
+;
 
 -- Table: Conferences
 CREATE TABLE Conferences (
@@ -72,6 +96,9 @@ CREATE TABLE Early_signup_discounts (
     CONSTRAINT Early_signup_discounts_pk PRIMARY KEY  (discount_id)
 );
 
+CREATE INDEX esd_end_date on Early_signup_discounts (end_date ASC)
+;
+
 -- Table: Participants
 CREATE TABLE Participants (
     participant_id int  NOT NULL IDENTITY,
@@ -83,6 +110,12 @@ CREATE TABLE Participants (
     CONSTRAINT Participants_pk PRIMARY KEY  (participant_id)
 );
 
+CREATE INDEX participants_client_id on Participants (clients_id ASC)
+;
+
+CREATE INDEX participants_name on Participants (surname ASC,name ASC)
+;
+
 -- Table: Payments
 CREATE TABLE Payments (
     payment_id int  NOT NULL IDENTITY,
@@ -92,12 +125,21 @@ CREATE TABLE Payments (
     CONSTRAINT Payments_pk PRIMARY KEY  (payment_id)
 );
 
+CREATE INDEX payment_reservation on Payments (reservation_id ASC)
+;
+
 -- Table: Workshop_registration
 CREATE TABLE Workshop_registration (
     Participant_id int  NOT NULL,
     reservation_id int  NOT NULL,
     CONSTRAINT Workshop_registration_pk PRIMARY KEY  (Participant_id,reservation_id)
 );
+
+CREATE INDEX workshop_reg_part_id on Workshop_registration (Participant_id ASC)
+;
+
+CREATE INDEX workshop_reg_res_id on Workshop_registration (reservation_id ASC)
+;
 
 -- Table: Workshop_reservations
 CREATE TABLE Workshop_reservations (
@@ -111,6 +153,15 @@ CREATE TABLE Workshop_reservations (
     CONSTRAINT Workshop_reservations_pk PRIMARY KEY  (reservation_id)
 );
 
+CREATE INDEX workshop_res_conf_res_id on Workshop_reservations (Conference_day_res_id ASC)
+;
+
+CREATE INDEX workshop_res_pay_deadline on Workshop_reservations (due_price ASC)
+;
+
+CREATE INDEX workshop_res_workshop_id on Workshop_reservations (workshop_id ASC)
+;
+
 -- Table: Workshops
 CREATE TABLE Workshops (
     workshop_id int  NOT NULL IDENTITY,
@@ -122,6 +173,12 @@ CREATE TABLE Workshops (
     number_of_seats int  NOT NULL DEFAULT 0 CHECK (number_of_seats >= 0),
     CONSTRAINT Workshops_pk PRIMARY KEY  (workshop_id)
 );
+
+CREATE INDEX workshop_day_id on Workshops (conference_day_id ASC)
+;
+
+CREATE INDEX workshop_time on Workshops (start_time ASC,end_time ASC)
+;
 
 -- foreign keys
 -- Reference: Companies_Clients (table: Companies)
