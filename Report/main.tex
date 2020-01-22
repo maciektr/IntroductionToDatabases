@@ -81,7 +81,6 @@ top=20mm
 \section{Implementacja}
     \lstinputlisting[language=sql]{../Create.sql}
     \newpage
-    \lstinputlisting[language=sql]{../Functions/isValidNip.sql}
 
 \newpage 
 \section{Widoki}
@@ -89,10 +88,17 @@ top=20mm
     
 \newpage 
 \section{Funkcje}
+Funkcja sprawdzająca czy wprowadzony NIP jest zgodny z obowiązującymi prawami.
+    \lstinputlisting[language=sql]{../Functions/isValidNip.sql}
+Funkcja sprawdzająca czy dany klient jest firmą. 
     \lstinputlisting[language=sql]{../Functions/isClientCompany.sql}
+Funkcja zwracająca imię i nazwisko klienta (jeśli jest on osobą fizyczną)
     \lstinputlisting[language=sql]{../Functions/showClientsName.sql}
+Funkcja zwracająca ilość wolnych miejsc na danej konferencji
     \lstinputlisting[language=sql]{../Functions/FreeSeats/conferenceFreeSeats.sql}
+Funkcja zwracająca ilość wolnych miejsc na danych warsztatach
     \lstinputlisting[language=sql]{../Functions/FreeSeats/workshopFreeSeats.sql}
+Funkcja zwracająca imiona i nazwiska uczestników danej konferencji
     \lstinputlisting[language=sql]{../Functions/ParticipantsLists/participantsForGivenConference.sql}
     \lstinputlisting[language=sql]{../Functions/ParticipantsLists/participantsForGivenWorkshop.sql}
     \lstinputlisting[language=sql]{../Functions/PaymentsAndPrices/clientsBalance.sql}
