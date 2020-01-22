@@ -121,6 +121,11 @@ Procedury aktualizujące informacje zawarte w bazie danych:
     \lstinputlisting[language=sql]{../Procedures/UpdateProcedures.sql}
 
 \newpage
+\section{Triggery}
+    \lstinputlisting[language=sql]{../Triggers/Conferences.sql}
+    \lstinputlisting[language=sql]{../Triggers/Workshops.sql}
+
+\newpage
 \section{Generator danych}
     \lstinputlisting[language=python]{../Generator/main.py}
     \lstinputlisting[language=python]{../Generator/AbstractClass.py}
@@ -148,6 +153,39 @@ Procedury aktualizujące informacje zawarte w bazie danych:
     \lstinputlisting[language=python]{../Generator/WorkshopRegistration.py}
     \lstinputlisting[language=python]{../Generator/WorkshopResGen.py}
     \lstinputlisting[language=python]{../Generator/WorkshopRes.py}
+
+\newpage
+\section{Funkcje realizowane przez system}
+    Funkcje użytkowników:
+    \begin{itemize}
+        \item Administrator - Dodawanie pracowników 
+        \item Pracownik – Dodawanie organizatorów
+        \item Organizator – Utworzenie nowej konferencji
+        \item Organizator – Wprowadzenie informacji o kolejnych dniach konferencji
+        \item Organizator - Wprowadzenie informacji o warsztatach 
+        \item Klient - Rejestracja w charakterze uczestnika / firmy w systemie 
+        \item Klient - Rezerwacja miejsc na konferencji 
+        \item Klient – Rezerwacja miejsc na warsztatach
+        \item Uczestnik - Wprowadzenie danych osobowych 
+        \item Organizator - Generowanie raportów o brakujących danych osobowych 
+        \item Organizator - Generowanie identyfikatorów 
+        \item Organizator - Generowanie raportów o zarejestrowanych uczestnikach na każdy dzień i warsztat 
+        \item Organizator – Wprowadzanie progów cenowych
+        \item Organizator – Wprowadzanie cen warsztatów 
+        \item Organizator  - Generowanie informacji o płatnościach 
+        \item Organizator – Wprowadzenie informacji o wpływającej wpłacie od Klienta
+        \item Pracownik - Generowanie danych statystycznych na temat klientów 
+    \end{itemize}
+    Funkcje systemowe: 
+    \begin{itemize}
+        \item Zapewnienie, by wszyscy zapisujący się na warsztaty spełniali wymogi (np. by byli zarejestrowani na konferencję) 
+        \item Obsługa zapisów na warsztaty (limit miejsc, inne warsztaty)
+        \item Kalkulacja sumarycznego kosztu ponoszonego przez uczestnika w ramach udziału w konferencji
+        \item Kalkulacja sumarycznego kosztu ponoszonego przez klienta
+        \item Informacja o dostępnych wolnych miejscach na konferencję 
+        \item Rejestracja płatności klientów, obsługa nieopłaconych rezerwacji
+        \item Tworzenie raportów dla organizatorów – najbardziej aktywni klienci, informacje o płatnościach klientów 
+    \end{itemize}
 
 \newpage
 \section{Uprawnienia}
